@@ -84,7 +84,7 @@ function initCanvas() {
   resize();
   window.addEventListener('resize', resize);
 
-  const colors = ['rgba(123,111,255,', 'rgba(91,143,255,', 'rgba(236,72,153,'];
+  const colors = ['rgba(57,255,136,', 'rgba(0,224,168,', 'rgba(0,255,204,'];
 
   for (let i = 0; i < 90; i++) {
     particles.push({
