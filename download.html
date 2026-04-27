@@ -35,6 +35,30 @@
 
     /*  Big download button  */
     .dl-btn-wrap { display: flex; flex-direction: column; gap: 16px; }
+    .dl-divider {
+      display: flex; align-items: center; gap: 16px;
+      color: var(--text-3); font-size: 13px; font-weight: 500;
+    }
+    .dl-divider::before, .dl-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .dl-btn-ios {
+      display: flex; align-items: center; gap: 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--r-xl); padding: 20px 32px;
+      text-decoration: none; color: var(--text);
+      transition: var(--transition); cursor: pointer; width: 100%;
+    }
+    .dl-btn-ios:hover {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(57,255,136,0.35);
+      transform: translateY(-2px);
+    }
+    .dl-btn-ios .dl-btn-icon { font-size: 36px; flex-shrink: 0; }
+    .dl-btn-ios .dl-btn-text .line1 { font-size: 13px; font-weight: 500; opacity: 0.7; margin-bottom: 2px; }
+    .dl-btn-ios .dl-btn-text .line2 { font-size: 20px; font-weight: 800; font-family: 'Space Grotesk', sans-serif; }
+    .dl-btn-ios .dl-btn-arrow { margin-left: auto; font-size: 20px; opacity: 0.5; }
     .dl-btn-main {
       display: flex; align-items: center; gap: 20px;
       background: var(--grad);
@@ -230,18 +254,18 @@
   <div class="container">
     <div class="dl-grid">
       <div class="dl-text reveal">
-        <span class="section-label">🚀 Free Download</span>
+        <span class="section-label">🚀 Free — All Platforms</span>
         <h1>Get LockedIn<br><span class="gradient-text">Absolutely Free</span></h1>
         <p>
-          Download the Android APK and install it in under 60 seconds.
-          No subscription required. No account walls. Just science-backed
-          cognitive training, ready to go.
+          Android users can download the native APK. iPhone and iPad users
+          can launch the full web app instantly — no install required.
+          No subscription. No account walls.
         </p>
 
         <div class="dl-btn-wrap">
-          <!-- UPDATE THIS HREF WITH THE REAL APK URL WHEN AVAILABLE -->
+          <!-- Android APK -->
           <a href="#" class="dl-btn-main" id="downloadBtn" onclick="handleDownload(event)">
-            <div class="dl-btn-icon">📲</div>
+            <div class="dl-btn-icon">🤖</div>
             <div class="dl-btn-text">
               <div class="line1">Download for Android</div>
               <div class="line2">LockedIn APK</div>
@@ -254,11 +278,29 @@
             <span>📦 Free</span>
             <span>🔒 Safe &amp; Secure</span>
           </div>
+
+          <div class="dl-divider">or</div>
+
+          <!-- iOS / Web App -->
+          <a href="https://focuspro-fm2d.onrender.com/" target="_blank" rel="noopener" class="dl-btn-ios">
+            <div class="dl-btn-icon"> </div>
+            <div class="dl-btn-text">
+              <div class="line1">iPhone &amp; iPad — Open in Browser</div>
+              <div class="line2">Launch Web App</div>
+            </div>
+            <div class="dl-btn-arrow">↗</div>
+          </a>
+
+          <div class="dl-meta" style="margin-top:-4px;">
+            <span>🍎 iOS Safari</span>
+            <span>💻 Any Browser</span>
+            <span>⚡ No Install</span>
+          </div>
         </div>
 
         <!-- Release note -->
         <div class="highlight-box mt-32" style="font-size:13px;">
-          <strong>📌 Note:</strong> LockedIn is currently in active development. The APK link will be updated upon official release. Check back soon, or bookmark this page.
+          <strong>📌 Note:</strong> The Android APK link will be updated upon official release. iOS users can use the full-featured web app right now at <strong>focuspro-fm2d.onrender.com</strong>.
         </div>
       </div>
 
@@ -509,7 +551,7 @@
           Is this available on iOS?
           <span class="arrow">▾</span>
         </div>
-        <div class="faq-a">LockedIn is currently available as an Android APK. An iOS version and Google Play listing are planned for a future release. Follow the project for updates.</div>
+        <div class="faq-a">Yes — iPhone and iPad users can access the full LockedIn experience through the web app at <a href="https://focuspro-fm2d.onrender.com/" target="_blank" rel="noopener" style="color:var(--purple-light);text-decoration:none;">focuspro-fm2d.onrender.com</a>. Open it in Safari and tap <strong>Share → Add to Home Screen</strong> for a native app-like experience. A dedicated iOS app is also planned for a future release.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFaq(this)">
@@ -531,14 +573,24 @@
       <p style="font-size:18px;color:var(--text-2);max-width:500px;margin:0 auto 40px;">
         12 minutes a day. 10 research-backed games. One measurable result: a sharper, more focused mind.
       </p>
-      <a href="#" class="dl-btn-main" onclick="handleDownload(event)" style="max-width:440px;margin:0 auto;justify-content:center;">
-        <div class="dl-btn-icon">📲</div>
-        <div class="dl-btn-text">
-          <div class="line1">Download for Android</div>
-          <div class="line2">LockedIn APK  Free</div>
-        </div>
-        <div class="dl-btn-arrow">↓</div>
-      </a>
+      <div style="display:flex;flex-direction:column;gap:14px;max-width:440px;margin:0 auto;">
+        <a href="#" class="dl-btn-main" onclick="handleDownload(event)" style="justify-content:center;">
+          <div class="dl-btn-icon">🤖</div>
+          <div class="dl-btn-text">
+            <div class="line1">Download for Android</div>
+            <div class="line2">LockedIn APK  Free</div>
+          </div>
+          <div class="dl-btn-arrow">↓</div>
+        </a>
+        <a href="https://focuspro-fm2d.onrender.com/" target="_blank" rel="noopener" class="dl-btn-ios" style="justify-content:center;">
+          <div class="dl-btn-icon"> </div>
+          <div class="dl-btn-text">
+            <div class="line1">iPhone &amp; iPad</div>
+            <div class="line2">Launch Web App</div>
+          </div>
+          <div class="dl-btn-arrow">↗</div>
+        </a>
+      </div>
     </div>
   </div>
 </section>
