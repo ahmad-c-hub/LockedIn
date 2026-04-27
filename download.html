@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Download LockedIn APK</title>
+  <link rel="icon" href="appLogo.png" type="image/png" />
   <link rel="stylesheet" href="style.css" />
   <style>
     /*  Hero  */
@@ -300,7 +301,7 @@
 
         <!-- Release note -->
         <div class="highlight-box mt-32" style="font-size:13px;">
-          <strong>📌 Note:</strong> The Android APK link will be updated upon official release. iOS users can use the full-featured web app right now at <strong>focuspro-fm2d.onrender.com</strong>.
+          <strong>📌 iOS users:</strong> The APK is Android-only. Use the full-featured web app at <strong>focuspro-fm2d.onrender.com</strong> — open in Safari and tap Share → Add to Home Screen for a native-like experience.
         </div>
       </div>
 
@@ -643,12 +644,8 @@ function toggleFaq(el) {
 function handleDownload(e) {
   e.preventDefault();
   // Replace the href below with the real APK download URL
-  const APK_URL = '#'; // TODO: Update with real APK URL
-  if (APK_URL === '#') {
-    showToast('APK coming soon! Check back when the official release is published.');
-  } else {
-    window.location.href = APK_URL;
-  }
+  const APK_URL = 'https://github.com/aboodsamad/FocusProFrontEnd/releases/download/v1.5/app-release.apk';
+  window.location.href = APK_URL;
 }
 
 function showToast(msg) {
