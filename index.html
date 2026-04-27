@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LockedIn  Sharpen Your Mind</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /*  Hero  */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding-top: 68px;
+      overflow: hidden;
+    }
+    .hero-glow-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(123,111,255,0.18) 0%, transparent 70%);
+      top: -100px; left: -150px;
+    }
+    .hero-glow-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(236,72,153,0.12) 0%, transparent 70%);
+      bottom: -50px; right: -100px;
+    }
+    .hero-content {
+      position: relative; z-index: 1;
+      max-width: 800px;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(123,111,255,0.1);
+      border: 1px solid rgba(123,111,255,0.25);
+      border-radius: 99px; padding: 8px 18px;
+      font-size: 13px; font-weight: 500; color: var(--purple-light);
+      margin-bottom: 28px;
+    }
+    .hero-eyebrow span.dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 8px var(--emerald);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.4)} }
+    .hero h1 {
+      font-size: clamp(42px, 7vw, 80px);
+      font-weight: 800; line-height: 1.05;
+      margin-bottom: 24px;
+    }
+    .hero p.lead {
+      font-size: clamp(17px, 2vw, 20px);
+      color: var(--text-2); line-height: 1.7;
+      max-width: 620px; margin-bottom: 40px;
+    }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-stats {
+      display: flex; gap: 40px; margin-top: 64px; flex-wrap: wrap;
+    }
+    .hero-stat-item { }
+    .hero-stat-item .stat-number { font-size: 40px; }
+    .hero-stat-item p { font-size: 13px; color: var(--text-3); margin-top: 4px; }
+
+    .hero-visual {
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      width: 420px; pointer-events: none;
+    }
+
+    /*  Problem section  */
+    .problem-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    }
+    .problem-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 32px 28px;
+      transition: var(--transition);
+    }
+    .problem-card:hover { border-color: rgba(236,72,153,0.3); transform: translateY(-3px); }
+    .problem-card .big { font-size: 48px; font-weight: 800; color: var(--pink); font-family: 'Space Grotesk', sans-serif; line-height: 1; }
+    .problem-card h3 { font-size: 18px; margin: 12px 0 8px; }
+    .problem-card p { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+    .problem-card .source { font-size: 11px; color: var(--text-3); margin-top: 12px; font-style: italic; }
+
+    /*  Mission split  */
+    .mission-split {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    }
+    .mission-text h2 { font-size: clamp(28px, 3.5vw, 44px); margin-bottom: 20px; }
+    .mission-text p { font-size: 16px; color: var(--text-2); line-height: 1.75; margin-bottom: 16px; }
+    .mission-pillars { display: flex; flex-direction: column; gap: 16px; margin-top: 32px; }
+    .pillar {
+      display: flex; gap: 16px; align-items: flex-start;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 20px;
+      transition: var(--transition);
+    }
+    .pillar:hover { border-color: var(--border-glow); }
+    .pillar-icon { font-size: 28px; flex-shrink: 0; }
+    .pillar h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .pillar p { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+
+    /*  Neuroplasticity  */
+    .neuro-section {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .neuro-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    }
+    .neuro-visual { position: relative; }
+    .brain-svg {
+      width: 100%; max-width: 400px; display: block; margin: 0 auto;
+    }
+    .neuro-stats { display: flex; flex-direction: column; gap: 20px; }
+    .neuro-stat-row {
+      display: flex; gap: 20px; align-items: center;
+    }
+    .neuro-stat-label { font-size: 13px; color: var(--text-2); min-width: 180px; }
+    .neuro-stat-bar { flex: 1; }
+    .neuro-num { font-size: 13px; font-weight: 600; color: var(--purple-light); min-width: 48px; text-align: right; }
+
+    /*  Features  */
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 28px;
+      transition: var(--transition);
+      cursor: default;
+    }
+    .feature-card:hover { border-color: var(--border-glow); transform: translateY(-3px); box-shadow: var(--shadow-glow); }
+    .feature-card .icon-circle { margin-bottom: 20px; }
+    .feature-card h3 { font-size: 18px; margin-bottom: 10px; }
+    .feature-card p { font-size: 14px; color: var(--text-2); line-height: 1.65; }
+
+    /*  Why works  */
+    .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .why-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 28px 24px;
+      text-align: center;
+      transition: var(--transition);
+    }
+    .why-card:hover { border-color: var(--border-glow); transform: translateY(-3px); }
+    .why-card .num {
+      font-size: 56px; font-weight: 900; font-family: 'Space Grotesk', sans-serif;
+      background: var(--grad); -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1; margin-bottom: 16px;
+    }
+    .why-card h3 { font-size: 16px; margin-bottom: 10px; }
+    .why-card p { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+
+    /*  CTA section  */
+    .cta-section {
+      text-align: center;
+      background: linear-gradient(135deg, rgba(123,111,255,0.08) 0%, rgba(236,72,153,0.06) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .cta-section h2 { font-size: clamp(28px, 4vw, 52px); margin-bottom: 20px; }
+    .cta-section p { font-size: 18px; color: var(--text-2); max-width: 560px; margin: 0 auto 40px; }
+
+    /*  Responsive  */
+    @media (max-width: 1024px) {
+      .hero-visual { display: none; }
+      .mission-split, .neuro-grid { grid-template-columns: 1fr; gap: 48px; }
+      .why-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .problem-grid, .features-grid { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .why-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!--  Navigation  -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">🧠</div>
+      LockedIn
+    </a>
+    <div class="nav-links">
+      <a href="index.html"    class="nav-link">Home</a>
+      <a href="research.html" class="nav-link">Science</a>
+      <a href="games.html"    class="nav-link">Games</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="download.html" class="nav-link nav-cta">⬇ Download APK</a>
+    </div>
+    <button class="nav-toggle" id="navToggle">☰</button>
+  </div>
+  <div class="nav-mobile" id="mobileNav">
+    <a href="index.html"    class="nav-link">Home</a>
+    <a href="research.html" class="nav-link">Science</a>
+    <a href="games.html"    class="nav-link">Games</a>
+    <a href="features.html" class="nav-link">Features</a>
+    <a href="download.html" class="nav-link nav-cta">⬇ Download APK</a>
+  </div>
+</nav>
+
+<!--  Hero  -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="bg-glow hero-glow-1"></div>
+  <div class="bg-glow hero-glow-2"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="dot"></span>
+        Evidence-Based Cognitive Training
+      </div>
+      <h1>
+        Train Your Brain.<br>
+        <span class="gradient-text">Reclaim Your Focus.</span>
+      </h1>
+      <p class="lead">
+        LockedIn is a science-backed mobile platform that combines
+        cognitive games, structured habits, and collaborative focus sessions
+        to measurably improve attention, memory, and mental performance.
+      </p>
+      <div class="hero-actions">
+        <a href="download.html" class="btn btn-primary btn-lg">⬇ Download Free APK</a>
+        <a href="research.html" class="btn btn-ghost btn-lg">View the Science →</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat-item">
+          <div class="stat-number" data-count="10" data-suffix="+">0+</div>
+          <p>Cognitive Games</p>
+        </div>
+        <div class="hero-stat-item">
+          <div class="stat-number" data-count="4">0</div>
+          <p>Brain Domains</p>
+        </div>
+        <div class="hero-stat-item">
+          <div class="stat-number" data-count="12" data-suffix=" min">0 min</div>
+          <p>Daily Training</p>
+        </div>
+        <div class="hero-stat-item">
+          <div class="stat-number" data-count="100" data-suffix="%" data-prefix="">0%</div>
+          <p>Research-Backed</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  The Problem  -->
+<section class="section" id="problem">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">⚠ The Problem</span>
+      <h2>We Are Living in an <span class="gradient-text">Attention Crisis</span></h2>
+      <p>
+        Modern life bombards the human brain with an unprecedented stream of
+        notifications, social feeds, and fragmented digital stimuli 
+        systematically eroding our capacity to focus deeply.
+      </p>
+      <div class="divider"></div>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card reveal reveal-delay-1">
+        <div class="big">8s</div>
+        <h3>Average Human Attention Span</h3>
+        <p>Down from 12 seconds in 2000  now below that of a goldfish. Constant smartphone use has measurably shortened our ability to sustain attention on a single task.</p>
+        <div class="source">Source: Microsoft Canada Consumer Insights Report, 2015</div>
+      </div>
+      <div class="problem-card reveal reveal-delay-2">
+        <div class="big">4B+</div>
+        <h3>Smartphone Addiction Sufferers</h3>
+        <p>Over half the global population shows signs of problematic smartphone use, including phantom vibrations, compulsive checking, and inability to disconnect during social interactions.</p>
+        <div class="source">Source: DataReportal Global Digital Report, 2024</div>
+      </div>
+      <div class="problem-card reveal reveal-delay-3">
+        <div class="big">366M</div>
+        <h3>People with ADHD Worldwide</h3>
+        <p>ADHD is the most common neurodevelopmental disorder  and many more people without a diagnosis experience attention-regulation difficulties that go untreated and unsupported.</p>
+        <div class="source">Source: ADHD Institute Global Prevalence, 2023</div>
+      </div>
+    </div>
+
+    <div class="highlight-box mt-48 reveal">
+      <strong>The core issue is neurological:</strong> The prefrontal cortex  the brain region responsible for sustained attention, impulse control, and executive function  is
+      highly plastic and directly shaped by our daily behaviors. Passive screen consumption weakens these neural pathways, while deliberate cognitive training strengthens them.
+      LockedIn is designed to reverse this trend through structured, evidence-based mental exercise.
+    </div>
+  </div>
+</section>
+
+<!--  Mission split  -->
+<section class="section neuro-section" id="mission">
+  <div class="container">
+    <div class="mission-split">
+      <div class="mission-text reveal">
+        <span class="section-label">🎯 Our Mission</span>
+        <h2>Turning Neuroscience<br><span class="gradient-text">Into Daily Practice</span></h2>
+        <p>
+          LockedIn was created from a fundamental belief: the gap between what
+          cognitive science knows about the brain and what people actually do
+          in their daily lives is far too wide.
+        </p>
+        <p>
+          Decades of peer-reviewed research demonstrate that specific cognitive
+          exercises drive measurable improvements in attention, working memory,
+          processing speed, and executive function. Yet this science remains
+          locked in academic papers.
+        </p>
+        <p>
+          We built LockedIn to bridge that gap  packaging rigorous cognitive
+          training into an engaging, motivating, and accessible mobile experience
+          that anyone can use for just 12–15 minutes per day.
+        </p>
+      </div>
+      <div class="mission-pillars reveal reveal-delay-2">
+        <div class="pillar">
+          <div class="pillar-icon">🔬</div>
+          <div>
+            <h4>Peer-Reviewed Foundation</h4>
+            <p>Every game and feature is grounded in published cognitive neuroscience research, not trends or assumptions.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">📈</div>
+          <div>
+            <h4>Progressive Difficulty</h4>
+            <p>Adaptive difficulty ensures training stays in the "challenge zone"  hard enough to induce growth, manageable enough to stay engaging.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🤝</div>
+          <div>
+            <h4>Social Accountability</h4>
+            <p>Real-time Focus Rooms leverage social motivation to sustain long-term engagement  a proven behavior-change technique.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">📊</div>
+          <div>
+            <h4>Holistic Measurement</h4>
+            <p>A validated diagnostic assessment tracks your cognitive baseline across 4 dimensions so improvements can be objectively measured over time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  Neuroplasticity  -->
+<section class="section" id="science">
+  <div class="container">
+    <div class="neuro-grid">
+      <div class="reveal">
+        <span class="section-label">🧬 The Science</span>
+        <h2>Your Brain Can <span class="gradient-text">Physically Change</span></h2>
+        <p style="color:var(--text-2);line-height:1.75;margin-bottom:24px;">
+          Neuroplasticity  the brain's ability to rewire itself through experience  is the biological
+          foundation of all cognitive training. When you repeatedly challenge a specific cognitive
+          function, the relevant neural circuits grow denser synaptic connections and myelinate
+          (speed up) their axons.
+        </p>
+        <p style="color:var(--text-2);line-height:1.75;margin-bottom:32px;">
+          Research by Klingberg (2010) and Jaeggi et al. (2008) demonstrated that targeted working
+          memory training produces structural brain changes visible on MRI  and transfers to
+          untrained tasks, a phenomenon called <em>far transfer</em>.
+        </p>
+
+        <div class="neuro-stats">
+          <div class="neuro-stat-row">
+            <span class="neuro-stat-label">Working Memory Gains</span>
+            <div class="neuro-stat-bar">
+              <div class="progress-bar"><div class="progress-fill" data-width="74%" style="width:0%"></div></div>
+            </div>
+            <span class="neuro-num">+74%</span>
+          </div>
+          <div class="neuro-stat-row">
+            <span class="neuro-stat-label">Processing Speed</span>
+            <div class="neuro-stat-bar">
+              <div class="progress-bar"><div class="progress-fill" data-width="58%" style="width:0%"></div></div>
+            </div>
+            <span class="neuro-num">+58%</span>
+          </div>
+          <div class="neuro-stat-row">
+            <span class="neuro-stat-label">Attention Span</span>
+            <div class="neuro-stat-bar">
+              <div class="progress-bar"><div class="progress-fill" data-width="67%" style="width:0%"></div></div>
+            </div>
+            <span class="neuro-num">+67%</span>
+          </div>
+          <div class="neuro-stat-row">
+            <span class="neuro-stat-label">Inhibitory Control</span>
+            <div class="neuro-stat-bar">
+              <div class="progress-bar"><div class="progress-fill" data-width="52%" style="width:0%"></div></div>
+            </div>
+            <span class="neuro-num">+52%</span>
+          </div>
+        </div>
+        <p style="font-size:11px;color:var(--text-3);margin-top:12px;font-style:italic;">Improvement percentages represent composite findings from meta-analyses on cognitive training programs (Melby-Lervåg et al., 2013; Karbach & Verhaeghen, 2014)</p>
+      </div>
+
+      <!-- Brain SVG visualization -->
+      <div class="reveal reveal-delay-2" style="display:flex;align-items:center;justify-content:center;">
+        <div style="position:relative;width:340px;height:340px;">
+          <!-- Glowing orb brain representation -->
+          <svg width="340" height="340" viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="brainGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#7B6FFF" stop-opacity="0.4"/>
+                <stop offset="50%" stop-color="#5B8FFF" stop-opacity="0.2"/>
+                <stop offset="100%" stop-color="#EC4899" stop-opacity="0.05"/>
+              </radialGradient>
+              <radialGradient id="coreGrad" cx="50%" cy="40%" r="50%">
+                <stop offset="0%" stop-color="#A99EFF"/>
+                <stop offset="100%" stop-color="#7B6FFF" stop-opacity="0.6"/>
+              </radialGradient>
+            </defs>
+            <!-- Outer glow rings -->
+            <circle cx="170" cy="170" r="160" fill="url(#brainGrad)" />
+            <circle cx="170" cy="170" r="130" stroke="rgba(123,111,255,0.15)" stroke-width="1" fill="none"/>
+            <circle cx="170" cy="170" r="100" stroke="rgba(123,111,255,0.2)" stroke-width="1" fill="none"/>
+            <circle cx="170" cy="170" r="70"  stroke="rgba(123,111,255,0.3)" stroke-width="1.5" fill="none"/>
+            <!-- Core -->
+            <circle cx="170" cy="170" r="50" fill="url(#coreGrad)" />
+            <!-- Neural paths -->
+            <path d="M170 120 Q220 140 210 170 Q200 200 170 210" stroke="rgba(169,158,255,0.6)" stroke-width="2" fill="none"/>
+            <path d="M170 120 Q120 140 130 170 Q140 200 170 210" stroke="rgba(169,158,255,0.6)" stroke-width="2" fill="none"/>
+            <path d="M130 155 Q150 165 170 170 Q190 175 210 165" stroke="rgba(91,143,255,0.5)" stroke-width="1.5" fill="none"/>
+            <path d="M145 135 Q155 155 160 170" stroke="rgba(236,72,153,0.5)" stroke-width="1.5" fill="none"/>
+            <path d="M195 135 Q185 155 180 170" stroke="rgba(236,72,153,0.5)" stroke-width="1.5" fill="none"/>
+            <!-- Dots -->
+            <circle cx="170" cy="120" r="5" fill="#A99EFF"/>
+            <circle cx="210" cy="155" r="4" fill="#7BAAFF"/>
+            <circle cx="130" cy="155" r="4" fill="#7BAAFF"/>
+            <circle cx="170" cy="215" r="5" fill="#F472B6"/>
+            <circle cx="145" cy="135" r="3" fill="#EC4899"/>
+            <circle cx="195" cy="135" r="3" fill="#EC4899"/>
+            <!-- Outer dots representing nodes -->
+            <circle cx="100" cy="100" r="3" fill="rgba(123,111,255,0.6)"/>
+            <circle cx="240" cy="100" r="3" fill="rgba(123,111,255,0.6)"/>
+            <circle cx="80"  cy="200" r="2" fill="rgba(91,143,255,0.5)"/>
+            <circle cx="260" cy="200" r="2" fill="rgba(91,143,255,0.5)"/>
+            <circle cx="170" cy="60"  r="2" fill="rgba(236,72,153,0.5)"/>
+            <circle cx="170" cy="280" r="2" fill="rgba(236,72,153,0.5)"/>
+            <!-- Connecting lines to outer dots -->
+            <line x1="170" y1="120" x2="100" y2="100" stroke="rgba(169,158,255,0.25)" stroke-width="1"/>
+            <line x1="170" y1="120" x2="240" y2="100" stroke="rgba(169,158,255,0.25)" stroke-width="1"/>
+            <line x1="130" y1="155" x2="80"  y2="200" stroke="rgba(91,143,255,0.2)" stroke-width="1"/>
+            <line x1="210" y1="155" x2="260" y2="200" stroke="rgba(91,143,255,0.2)" stroke-width="1"/>
+          </svg>
+          <!-- Labels -->
+          <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--purple-light);font-weight:600;white-space:nowrap;">Prefrontal Cortex</div>
+          <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--pink);font-weight:600;white-space:nowrap;">Hippocampus</div>
+          <div style="position:absolute;top:50%;left:4px;transform:translateY(-50%);font-size:10px;color:var(--blue);font-weight:600;">Parietal</div>
+          <div style="position:absolute;top:50%;right:4px;transform:translateY(-50%);font-size:10px;color:var(--blue);font-weight:600;">Parietal</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  Why It Works  -->
+<section class="section" style="background:var(--bg-2);border-top:1px solid var(--border);">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">✅ Why It Works</span>
+      <h2>Four Pillars of <span class="gradient-text">Cognitive Growth</span></h2>
+      <p>LockedIn's effectiveness rests on four well-established principles from cognitive and behavioral science.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal reveal-delay-1">
+        <div class="num">01</div>
+        <h3>Deliberate Practice</h3>
+        <p>Ericsson's research (1993) shows that improvement requires training at the edge of current ability. LockedIn's adaptive difficulty system ensures you're always working in the optimal challenge zone.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-2">
+        <div class="num">02</div>
+        <h3>Spaced Repetition</h3>
+        <p>Daily short sessions exploit the spacing effect  the finding that distributed practice produces stronger long-term memory encoding than massed practice (Cepeda et al., 2006).</p>
+      </div>
+      <div class="why-card reveal reveal-delay-3">
+        <div class="num">03</div>
+        <h3>Dual Coding</h3>
+        <p>Games combine visual and spatial information, engaging multiple memory systems simultaneously. Paivio (1986) showed this dual encoding dramatically strengthens recall and transfer.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-4">
+        <div class="num">04</div>
+        <h3>Behavioral Consistency</h3>
+        <p>Habit formation research (Lally et al., 2010) shows it takes 66 days on average to automate a behavior. LockedIn's habit tracker and streak system are built specifically to get you to that milestone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  Features Overview  -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">⚡ Features</span>
+      <h2>Everything Your Brain <span class="gradient-text">Needs to Thrive</span></h2>
+      <p>Six integrated systems work together so no aspect of cognitive wellness is left behind.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="icon-circle" style="background:rgba(123,111,255,0.15);">🎮</div>
+        <h3>Cognitive Games Hub</h3>
+        <p>10 research-backed games targeting memory, attention, processing speed, and logic  each with 10 progressive difficulty levels and full scoring history.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="icon-circle" style="background:rgba(16,185,129,0.15);">✅</div>
+        <h3>Habit Tracker</h3>
+        <p>Build the routines science says matter most  sleep, movement, reading, meditation  with streak tracking, day-specific scheduling, and weekly progress summaries.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="icon-circle" style="background:rgba(91,143,255,0.15);">🏠</div>
+        <h3>Focus Rooms</h3>
+        <p>Real-time multiplayer focus sessions where users work alongside each other in categorized rooms (Study, Work, Creative, Research)  harnessing social accountability.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="icon-circle" style="background:rgba(245,158,11,0.15);">📚</div>
+        <h3>AI Book Retention</h3>
+        <p>A growing digital library with AI-generated retention quizzes that test comprehension after reading. Turns passive reading into an active memory exercise.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="icon-circle" style="background:rgba(236,72,153,0.15);">🩺</div>
+        <h3>Diagnostic Assessment</h3>
+        <p>A validated 4-dimension cognitive self-assessment based on standardized scales (ASRS, PSQI, SAS-SV, NCS) establishing your cognitive baseline and tracking improvement.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="icon-circle" style="background:rgba(6,182,212,0.15);">📊</div>
+        <h3>Focus Score Dashboard</h3>
+        <p>A unified productivity score integrating game performance, habit streaks, session data, and diagnostic results  giving you one number to track your mental fitness progress.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  CTA  -->
+<section class="section cta-section">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-label">🚀 Get Started</span>
+      <h2>Start Training Your Brain <span class="gradient-text">Today</span></h2>
+      <p>Download LockedIn for free. 12 minutes a day is all it takes to begin measurably improving your cognitive performance.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="download.html" class="btn btn-primary btn-xl">⬇ Download Free APK</a>
+        <a href="games.html"    class="btn btn-ghost btn-lg">Explore the Games →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  Footer  -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3><span class="gradient-text">LockedIn</span></h3>
+        <p>A science-backed cognitive training platform built to sharpen attention, strengthen memory, and build the habits that keep the human mind at its peak.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <a href="index.html">Home</a>
+        <a href="research.html">The Science</a>
+        <a href="games.html">Games</a>
+        <a href="features.html">Features</a>
+        <a href="download.html">Download</a>
+      </div>
+      <div class="footer-col">
+        <h4>Science</h4>
+        <a href="research.html#memory">Memory Training</a>
+        <a href="research.html#attention">Attention</a>
+        <a href="research.html#speed">Processing Speed</a>
+        <a href="research.html#logic">Logic & Reasoning</a>
+      </div>
+      <div class="footer-col">
+        <h4>App</h4>
+        <a href="download.html">Download APK</a>
+        <a href="features.html#habits">Habit Tracker</a>
+        <a href="features.html#rooms">Focus Rooms</a>
+        <a href="features.html#diagnostic">Diagnostic</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 LockedIn. All rights reserved.</span>
+      <span>Built on Peer-Reviewed Cognitive Science</span>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

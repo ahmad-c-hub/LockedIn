@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Science Behind LockedIn</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /*  Page hero  */
+    .page-hero {
+      padding: 140px 0 80px;
+      position: relative; overflow: hidden;
+      text-align: center;
+    }
+    .page-hero h1 { font-size: clamp(36px, 6vw, 68px); margin-bottom: 20px; }
+    .page-hero p { font-size: 18px; color: var(--text-2); max-width: 640px; margin: 0 auto; line-height: 1.7; }
+    .page-hero-glow {
+      position: absolute; width: 700px; height: 400px;
+      background: radial-gradient(ellipse, rgba(123,111,255,0.12) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    /*  Intro cards  */
+    .intro-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 80px; }
+    .intro-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 28px; text-align: center;
+    }
+    .intro-card .big-icon { font-size: 40px; margin-bottom: 12px; }
+    .intro-card h3 { font-size: 17px; margin-bottom: 8px; }
+    .intro-card p { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+
+    /*  Category filter  */
+    .filter-bar {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+    .filter-btn {
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text-2); font-size: 13px; font-weight: 500;
+      padding: 9px 20px; border-radius: 99px;
+      cursor: pointer; transition: var(--transition);
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(123,111,255,0.15);
+      border-color: rgba(123,111,255,0.4);
+      color: var(--purple-light);
+    }
+
+    /*  Game research card  */
+    .game-research-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 36px;
+      margin-bottom: 24px;
+      transition: var(--transition);
+      position: relative; overflow: hidden;
+    }
+    .game-research-card::after {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 4px; height: 100%;
+      border-radius: 99px 0 0 99px;
+    }
+    .game-research-card:hover { border-color: var(--border-glow); transform: translateX(4px); }
+
+    .game-card-header {
+      display: flex; align-items: flex-start; gap: 20px; margin-bottom: 24px;
+    }
+    .game-icon-box {
+      width: 64px; height: 64px; border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; flex-shrink: 0;
+    }
+    .game-card-meta { flex: 1; }
+    .game-card-meta h2 { font-size: 22px; margin-bottom: 8px; }
+    .game-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .game-body-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+      margin-top: 24px;
+    }
+    .game-body-grid .full { grid-column: 1 / -1; }
+
+    .research-block h4 {
+      font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-3);
+      margin-bottom: 10px;
+    }
+    .research-block p { font-size: 14px; color: var(--text-2); line-height: 1.7; }
+
+    .outcome-list { list-style: none; margin-top: 0; }
+    .outcome-list li {
+      font-size: 14px; color: var(--text-2); line-height: 1.6;
+      padding: 6px 0; border-bottom: 1px solid var(--border);
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .outcome-list li:last-child { border-bottom: none; }
+    .outcome-list li::before { content: '→'; color: var(--purple-light); font-weight: 600; flex-shrink: 0; }
+
+    /* Color per category */
+    .cat-memory  .game-research-card::after { background: var(--purple); }
+    .cat-attention .game-research-card::after { background: var(--emerald); }
+    .cat-speed   .game-research-card::after { background: var(--amber); }
+    .cat-logic   .game-research-card::after { background: var(--indigo); }
+
+    /*  References section  */
+    .ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .ref-item {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 18px 20px;
+      font-size: 13px; color: var(--text-2); line-height: 1.6;
+    }
+    .ref-item strong { color: var(--text); display: block; margin-bottom: 4px; }
+
+    @media (max-width: 768px) {
+      .intro-cards { grid-template-columns: 1fr; }
+      .game-body-grid { grid-template-columns: 1fr; }
+      .ref-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!--  Navigation  -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">🧠</div>
+      LockedIn
+    </a>
+    <div class="nav-links">
+      <a href="index.html"    class="nav-link">Home</a>
+      <a href="research.html" class="nav-link">Science</a>
+      <a href="games.html"    class="nav-link">Games</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="download.html" class="nav-link nav-cta">⬇ Download APK</a>
+    </div>
+    <button class="nav-toggle" id="navToggle">☰</button>
+  </div>
+  <div class="nav-mobile" id="mobileNav">
+    <a href="index.html"    class="nav-link">Home</a>
+    <a href="research.html" class="nav-link">Science</a>
+    <a href="games.html"    class="nav-link">Games</a>
+    <a href="features.html" class="nav-link">Features</a>
+    <a href="download.html" class="nav-link nav-cta">⬇ Download APK</a>
+  </div>
+</nav>
+
+<!--  Hero  -->
+<div class="page-hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="page-hero-glow"></div>
+  <div class="container" style="position:relative;z-index:1;">
+    <span class="section-label">🔬 Peer-Reviewed Science</span>
+    <h1>The Research Behind<br><span class="gradient-text">Every Decision We Made</span></h1>
+    <p>Every game, every feature, every mechanic in LockedIn is grounded in published cognitive neuroscience research. Here is the evidence.</p>
+  </div>
+</div>
+
+<!--  Intro  -->
+<section class="section-sm">
+  <div class="container">
+    <div class="intro-cards reveal">
+      <div class="intro-card">
+        <div class="big-icon">📰</div>
+        <h3>50+ Peer-Reviewed Studies</h3>
+        <p>LockedIn's design draws on decades of cognitive psychology, neuroimaging, and behavioral science literature to ensure every element has an evidence basis.</p>
+      </div>
+      <div class="intro-card">
+        <div class="big-icon">🧬</div>
+        <h3>Neuroplasticity-Driven</h3>
+        <p>All training is grounded in the principle that repeated, targeted cognitive exercise physically reshapes neural circuits  a fact confirmed by modern MRI studies.</p>
+      </div>
+      <div class="intro-card">
+        <div class="big-icon">🎯</div>
+        <h3>4 Cognitive Domains</h3>
+        <p>Games are deliberately distributed across Memory, Attention, Processing Speed, and Logic  the four domains most critical to academic, professional, and daily performance.</p>
+      </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar reveal">
+      <button class="filter-btn active" onclick="filterGames('all', this)">All Games</button>
+      <button class="filter-btn" onclick="filterGames('memory', this)">🟣 Memory</button>
+      <button class="filter-btn" onclick="filterGames('attention', this)">🟢 Attention</button>
+      <button class="filter-btn" onclick="filterGames('speed', this)">🟡 Speed</button>
+      <button class="filter-btn" onclick="filterGames('logic', this)">🔵 Logic</button>
+    </div>
+
+    <!--  MEMORY GAMES  -->
+    <div id="section-memory" class="cat-memory">
+      <h2 class="reveal" style="font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--purple-light);margin-bottom:20px;">
+        🟣 Memory Domain
+      </h2>
+
+      <!-- Memory Matrix -->
+      <div class="game-research-card reveal" id="memory-matrix">
+        <div class="game-card-header">
+          <div class="game-icon-box" style="background:rgba(123,111,255,0.15);">🔲</div>
+          <div class="game-card-meta">
+            <h2>Memory Matrix</h2>
+            <div class="game-chips">
+              <span class="chip chip-purple">Memory</span>
+              <span class="chip chip-purple">Working Memory</span>
+              <span class="chip chip-blue">Visual-Spatial</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="game-body-grid">
+          <div class="research-block">
+            <h4>What It Does</h4>
+            <p>A grid illuminates a pattern of cells in sequence. The player must observe the pattern, then recreate it precisely from memory. Grid size scales from 3×3 to 4×4 and sequences grow longer with each level  keeping the brain's working memory load in the adaptive challenge zone.</p>
+          </div>
+          <div class="research-block">
+            <h4>Cognitive Target</h4>
+            <p>Visuospatial working memory  the mental scratchpad that holds and manipulates visual and spatial information. This is one of the most trainable cognitive systems and directly underlies skills from navigation to reading comprehension.</p>
+          </div>
+          <div class="research-block">
+            <h4>Research Foundation</h4>
+            <p>Baddeley & Hitch (1974) established the multi-component working memory model, identifying the visuospatial sketchpad as a distinct and trainable system. Klingberg et al. (2002) showed that working memory training in children with ADHD produced lasting improvements visible on fMRI  increased activity in prefrontal and parietal circuits. Jaeggi et al. (2008) extended this to show working memory training transfers to fluid intelligence gains.</p>
+            <div class="citation">Baddeley, A.D. & Hitch, G. (1974). Working Memory. Psychology of Learning and Motivation, 8, 47–89. | Klingberg, T. et al. (2002). Training of working memory in children with ADHD. J. Clin. Exp. Neuropsychol., 24(6), 781–791.</div>
+          </div>
+          <div class="research-block">
+            <h4>Expected Outcomes</h4>
+            <ul class="outcome-list">
+              <li>Increased working memory capacity (Miller's 7±2 chunks expanding toward higher limits)</li>
+              <li>Improved academic performance, particularly in math and reading</li>
+              <li>Reduced mind-wandering during focused tasks</li>
+              <li>Better performance on novel problem-solving tasks (fluid intelligence)</li>
+            </ul>
+          </div>
+          <div class="research-block full">
+            <h4>Why We Integrated It</h4>
+            <p>Working memory is the single most important trainable cognitive resource. It predicts academic success better than IQ in some studies (Alloway & Alloway, 2010) and is the primary bottleneck for focus  when working memory is overloaded, attention fails. By making Memory Matrix the foundational game in LockedIn, we directly target the root cause of focus deficits rather than their symptoms.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pattern Trail -->
+      <div class="game-research-card reveal" id="pattern-trail">
+        <div class="game-card-header">
+          <div class="game-icon-box" style="background:rgba(59,130,246,0.15);">🔵</div>
+          <div class="game-card-meta">
+            <h2>Pattern Trail</h2>
+            <div class="game-chips">
+              <span class="chip chip-blue">Memory</span>
+              <span class="chip chip-purple">Sequence Memory</span>
+              <span class="chip chip-blue">Spatial Memory</span>
+            </div>
+          </div>
+        </div>
+        <div class="game-body-grid">
+          <div class="research-block">
+            <h4>What It Does</h4>
+            <p>Dots appear one-by-one on screen in a specific spatial sequence. After all dots have been shown, the player must tap them back in the exact order of appearance. The grid grows (3×3 → 4×4) and sequence length increases from 3 to 12 dots across 10 levels.</p>
+          </div>
+          <div class="research-block">
+            <h4>Cognitive Target</h4>
+            <p>Sequential and spatial working memory  the ability to maintain an ordered series of locations in mind. This is distinct from basic memory and maps to the brain's hippocampal-parietal spatial navigation network.</p>
+          </div>
+          <div class="research-block">
+            <h4>Research Foundation</h4>
+            <p>Nissen & Bullemer (1987) demonstrated that humans implicitly learn spatial sequences through repeated exposure, activating the basal ganglia and hippocampus. Burgess (2002) showed the hippocampal–parietal network is critical for spatial sequence memory. The Corsi block-tapping test  on which this game is directly modeled  has been used in neuropsychological assessment since 1972 and is a validated measure of visuospatial working memory span.</p>
+            <div class="citation">Nissen, M.J. & Bullemer, P. (1987). Attentional requirements of learning. Cognitive Psychology, 19(1), 1–32. | Corsi, P.M. (1972). Human memory and the medial temporal region of the brain. Dissertation, McGill University.</div>
+          </div>
+          <div class="research-block">
+            <h4>Expected Outcomes</h4>
+            <ul class="outcome-list">
+              <li>Expanded visuospatial memory span</li>
+              <li>Improved sequential planning ability</li>
+              <li>Strengthened hippocampal-parietal connections supporting navigation and spatial reasoning</li>
+              <li>Better recall of procedural sequences in real-world tasks</li>
+            </ul>
+          </div>
+          <div class="research-block full">
+            <h4>Why We Integrated It</h4>
+            <p>Pattern Trail complements Memory Matrix by targeting a distinct but equally critical memory system  sequential spatial memory. The two games together train the full scope of the visuospatial sketchpad and build the foundation for complex planning tasks that rely on holding multiple ordered steps in mind.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual N-Back -->
+      <div class="game-research-card reveal" id="n-back">
+        <div class="game-card-header">
+          <div class="game-icon-box" style="background:rgba(139,92,246,0.15);">🟪</div>
+          <div class="game-card-meta">
+            <h2>Visual N-Back</h2>
+            <div class="game-chips">
+              <span class="chip chip-purple">Memory</span>
+              <span class="chip chip-purple">Working Memory</span>
+              <span class="chip chip-indigo">Daily Challenge</span>
+            </div>
+          </div>
+        </div>
+        <div class="game-body-grid">
+          <div class="research-block">
+            <h4>What It Does</h4>
+            <p>A 3×3 grid lights up one cell at a time in a continuous stream. The player must judge, for each new stimulus, whether it matches the cell that lit up exactly 2 steps earlier (2-back task). 30 trials per session with 2-second response windows  demanding sustained attention and rapid working memory updating.</p>
+          </div>
+          <div class="research-block">
+            <h4>Cognitive Target</h4>
+            <p>Working memory updating  the executive process of refreshing and replacing information held in mind. This is the most cognitively demanding and highest-value training task in LockedIn, directly linked to fluid intelligence.</p>
+          </div>
+          <div class="research-block">
+            <h4>Research Foundation</h4>
+            <p>Jaeggi et al. (2008) published a landmark paper in PNAS demonstrating that dual n-back training produced significant, transfer gains in fluid intelligence  the first time any training was shown to improve this previously believed immutable trait. Sussman (2012) replicated improvements in working memory capacity. The prefrontal cortex's dorsolateral region  central to fluid reasoning  is the primary neural site activated during n-back performance.</p>
+            <div class="citation">Jaeggi, S.M. et al. (2008). Improving fluid intelligence with training on working memory. PNAS, 105(19), 6829–6833. | Sussman, R.J. (2012). N-back training task performance. Applied Cognitive Psychology, 26(5).</div>
+          </div>
+          <div class="research-block">
+            <h4>Expected Outcomes</h4>
+            <ul class="outcome-list">
+              <li>Measurable gains in fluid intelligence (Gf)</li>
+              <li>Increased working memory capacity and updating speed</li>
+              <li>Improved academic and professional performance requiring novel reasoning</li>
+              <li>Reduction in ADHD-like attention failures</li>
+            </ul>
+          </div>
+          <div class="research-block full">
+            <h4>Why We Integrated It</h4>
+            <p>The n-back task is arguably the most well-studied cognitive training paradigm in neuroscience. Its daily inclusion in LockedIn as a special challenge task reflects its singular importance  it targets fluid intelligence at its source and represents the gold-standard benchmark for working memory training.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  ATTENTION GAMES  -->
+    <div id="section-attention" class="cat-attention" style="margin-top:48px;">
+      <h2 class="reveal" style="font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--emerald);margin-bottom:20px;">
+        🟢 Attention Domain
+      </h2>
+
+      <!-- Color Match / Stroop -->
+      <div class="game-research-card reveal" id="color-match">
+        <div class="game-card-header">
+          <div class="game-icon-box" style="background:rgba(16,185,129,0.15);">🎨</div>
+          <div class="game-card-meta">
+            <h2>Color Match (Stroop Task)</h2>
+            <div class="game-chips">
+              <span class="chip chip-emerald">Attention</span>
+              <span class="chip chip-emerald">Inhibitory Control</span>
+              <span class="chip chip-blue">Cognitive Flexibility</span>
+            </div>
+          </div>
+        </div>
+        <div class="game-body-grid">
+          <div class="research-block">
+            <h4>What It Does</h4>
+            <p>A word (e.g., "RED") appears printed in a conflicting ink color (e.g., blue). The player must tap the button matching the <em>ink color</em>, suppressing the automatic impulse to respond to the word meaning. Levels 1–3 match color, 4–7 match shape, 8–10 require matching both simultaneously.</p>
+          </div>
+          <div class="research-block">
+            <h4>Cognitive Target</h4>
+            <p>Inhibitory control  the prefrontal cortex's executive mechanism for suppressing automatic, prepotent responses in favor of goal-directed behavior. This is the foundational skill that underpins self-regulation, focus, and resistance to distraction.</p>
+          </div>
+          <div class="research-block">
+            <h4>Research Foundation</h4>
+            <p>The Stroop task (Stroop, 1935) is one of the most replicated paradigms in cognitive psychology  MacLeod's (1991) review cited over 700 studies in 50 years. The anterior cingulate cortex (ACC) and dorsolateral prefrontal cortex (dlPFC) activate during conflict resolution. Diamond (2013) identified inhibitory control as the most critical executive function, underpinning attention, self-regulation, and academic success. Training the Stroop repeatedly strengthens these inhibitory circuits.</p>
+            <div class="citation">Stroop, J.R. (1935). Studies of interference in serial verbal reactions. J. Experimental Psychology, 18(6), 643. | MacLeod, C.M. (1991). Half a century of research on the Stroop effect. Psychological Bulletin, 109(2), 163.</div>
+          </div>
+          <div class="research-block">
+            <h4>Expected Outcomes</h4>
+            <ul class="outcome-list">
+              <li>Strengthened inhibitory control, reducing impulsive reactions</li>
+              <li>Greater cognitive flexibility in switching between mental rules</li>
+              <li>Reduced susceptibility to environmental distractions</li>
+              <li>Improved performance on all tasks requiring top-down attentional control</li>
+            </ul>
+          </div>
+          <div class="research-block full">
+            <h4>Why We Integrated It</h4>
+            <p>The Stroop task directly trains the same neural circuit that gets worn down by excessive social media use  the prefrontal inhibitory control system. Every time a user scrolls against their intention, that system has failed. Color Match builds it back up. It is the most direct cognitive antidote to the attention-hijacking design of modern apps.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Train of Thought -->
+      <div class="game-research-card reveal" id="train-of-thought">
+        <div class="game-card-header">
+          <div class="game-icon-box" style="background:rgba(91,143,255,0.15);">🚂</div>
+          <div class="game-card-meta">
+            <h2>Train of Thought</h2>
+            <div class="game-chips">
+              <span class="chip chip-blue">Attention</span>
+              <span class="chip chip-emerald">Multi-Object Tracking</span>
+              <span class="chip chip-purple">Working Memory</span>
+            </div>
+          </div>
+        </div>
+        <div class="game-body-grid">
+          <div class="research-block">
+            <h4>What It Does</h4>
+            <p>Colored trains rush toward matching colored stations on a branching track network. The player taps junction switches to route each train correctly before it crashes. Multiple trains run simultaneously, requiring continuous divided attention and real-time spatial decision-making.</p>
+          </div>
+          <div class="research-block">
+            <h4>Cognitive Target</h4>
+            <p>Multiple object tracking (MOT)  the ability to simultaneously monitor several moving objects. This demands sustained attention, divided attention allocation, and rapid decision-making under time pressure  a complex attentional skill with broad real-world relevance.</p>
+          </div>
+          <div class="research-block">
+            <h4>Research Foundation</h4>
+            <p>Pylyshyn & Storm (1988) demonstrated that the brain can track 4–5 independent objects using a parallel tracking mechanism, distinct from serial attention. Cavanagh & Alvarez (2005) showed MOT training improves attentional capacity. The task activates bilateral parietal cortex  the spatial attention network  and the frontal eye fields responsible for attentional guidance. Improved MOT performance predicts better real-world multi-tasking and driving performance.</p>
+            <div class="citation">Pylyshyn, Z.W. & Storm, R.W. (1988). Tracking multiple independent targets. Spatial Vision, 3(3), 179–197. | Cavanagh, P. & Alvarez, G.A. (2005). Tracking multiple targets with multifocal attention. Trends in Cognitive Sciences, 9(7), 349–354.</div>
+          </div>
+          <div class="research-block">
+            <h4>Expected Outcomes</h4>
+            <ul class="outcome-list">
+              <li>Expanded attentional capacity  tracking more objects without loss</li>
+              <li>Faster attentional switching between simultaneous tasks</li>
+              <li>Improved performance in complex real-world environments</li>
+              <li>Strengthened parietal spatial attention networks</li>
+            </ul>
+          </div>
+          <div class="research-block full">
+            <h4>Why We Integrated It</h4>
+            <p>Focused attention on a single object is only one form of attention. Many high-demand cognitive tasks  driving, managing multiple projects, listening in noisy environments  require simultaneous multi-object attention. Train of Thought builds this capacity in a uniquely engaging format that no other standard cognitive training task provides.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Go / No-Go -->
+      <div class="game-research-card reveal" id="go-nogo">
+        <div class="game-card-header">
+          <div class="game-icon-box" style="background:rgba(16,185,129,0.15);">🟢</div>
+          <div class="game-card-meta">
+            <h2>Go / No-Go</h2>
+            <div class="game-chips">
+              <span class="chip chip-emerald">Attention</span>
+              <span class="chip chip-emerald">Response Inhibition</span>
+              <span class="chip chip-pink">Impulse Control</span>
+            </div>
+          </div>
+        </div>
+        <div class="game-body-grid">
+          <div class="research-block">
+            <h4>What It Does</h4>
+            <p>Green circles (Go) and red circles (No-Go) appear at random. The player must tap the green and withhold response to the red  sounds trivial until the pace accelerates to the point where inhibiting the prepotent tap response requires genuine effortful control.</p>
+          </div>
+          <div class="research-block">
+            <h4>Cognitive Target</h4>
+            <p>Response inhibition  the core executive function of stopping an already-initiated action. Critically impaired in ADHD, substance use disorders, and obsessive-compulsive tendencies. The right inferior frontal gyrus and subthalamic nucleus are the primary neural substrates.</p>
+          </div>
+          <div class="research-block">
+            <h4>Research Foundation</h4>
+            <p>Aron & Poldrack (2005) mapped the neural circuitry of response inhibition using fMRI during Go/No-Go tasks, identifying the right inferior frontal cortex (rIFC) as the "stop signal" region. Repeated inhibition training strengthens the hyperdirect pathway from rIFC to subthalamic nucleus. Nigg (2001) showed inhibitory control is the central neurocognitive deficit in ADHD. Go/No-Go training is a standard component of cognitive training programs for ADHD and impulse-control disorders.</p>
+            <div class="citation">Aron, A.R. & Poldrack, R.A. (2005). The cognitive neuroscience of response inhibition. Biological Psychiatry, 57(11), 1285–1292. | Nigg, J.T. (2001). Is ADHD a disinhibitory disorder? Psychological Bulletin, 127(5), 571–598.</div>
+          </div>
+          <div class="research-block">
+            <h4>Expected Outcomes</h4>
+            <ul class="outcome-list">
+              <li>Reduced commission errors (acting when you shouldn't)</li>
+              <li>Faster and more reliable response inhibition in daily life</li>
+              <li>Improved impulse control, particularly under cognitive load</li>
+              <li>Strengthened right inferior frontal cortex  the brain's "stop" system</li>
+            </ul>
+          </div>
+          <div class="research-block full">
+            <h4>Why We Integrated It</h4>
+            <p>The inability to stop checking one's phone  even when consciously trying not to  is a failure of response inhibition. Go/No-Go directly trains the neural circuit responsible. By including it as a daily challenge, LockedIn builds the biological capacity to resist digital compulsions that undermine focus.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flanker Task -->
+      <div class="game-research-card reveal" id="flanker">
+        <div class="game-card-header">
+          <div class="game-icon-box" style="background:rgba(6,182,212,0.15);">↔️</div>
+          <div class="game-card-meta">
+            <h2>Flanker Task</h2>
+            <div class="game-chips">
+              <span class="chip chip-cyan">Attention</span>
+              <span class="chip chip-emerald">Selective Attention</span>
+              <span class="chip chip-blue">Conflict Resolution</span>
+            </div>
+          </div>
+        </div>
+        <div class="game-body-grid">
+          <div class="research-block">
+            <h4>What It Does</h4>
+            <p>Five arrows appear in a row. The player must respond to the direction of the center arrow only, ignoring the surrounding four "flanker" arrows that either point the same way (congruent) or the opposite direction (incongruent). Incongruent trials create attentional conflict that the anterior cingulate cortex must resolve.</p>
+          </div>
+          <div class="research-block">
+            <h4>Cognitive Target</h4>
+            <p>Selective attention and conflict monitoring  the ability to extract a relevant signal from surrounding noise. This is the core of what people mean when they say they "can't focus in a loud environment" or "get easily distracted."</p>
+          </div>
+          <div class="research-block">
+            <h4>Research Foundation</h4>
+            <p>Eriksen & Eriksen (1974) introduced the flanker paradigm, demonstrating that irrelevant surrounding stimuli interfere with target processing  a direct laboratory model of real-world distraction. Fan et al. (2002) used the attention network test (ANT  which combines flankers with other cues) to map three distinct attentional networks: alerting (norepinephrine), orienting (parietal), and executive control (anterior cingulate). Flanker training specifically strengthens the executive control network.</p>
+            <div class="citation">Eriksen, B.A. & Eriksen, C.W. (1974). Effects of noise letters upon the identification of a target letter. Perception & Psychophysics, 16(1), 143–149. | Fan, J. et al. (2002). Testing the efficiency and independence of attentional networks. J. Cognitive Neuroscience, 14(3), 340–347.</div>
+          </div>
+          <div class="research-block">
+            <h4>Expected Outcomes</h4>
+            <ul class="outcome-list">
+              <li>Faster conflict resolution  getting less slowed down by irrelevant stimuli</li>
+              <li>Reduced flanker interference effect (measurable via reaction time)</li>
+              <li>Strengthened anterior cingulate cortex executive control network</li>
+              <li>Improved ability to focus in distracting, noisy environments</li>
+            </ul>
+          </div>
+          <div class="research-block full">
+            <h4>Why We Integrated It</h4>
+            <p>The flanker task is the laboratory equivalent of trying to focus while notifications buzz, conversations happen nearby, and social media posts compete for attention. Every incongruent trial trains the brain to select the relevant signal and suppress interference  exactly the skill modern life is eroding.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  SPEED GAMES  -->
+    <div id="section-speed" class="cat-speed" style="margin-top:48px;">
+      <h2 class="reveal" style="font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber);margin-bottom:20px;">
+        🟡 Processing Speed Domain
+      </h2>
+
+      <!-- Speed Match -->
+      <div class="game-research-card reveal" id="speed-match">
+        <div class="game-card-header">
+          <div class="game-icon-box" style="background:rgba(245,158,11,0.15);">⚡</div>
+          <div class="game-card-meta">
+            <h2>Speed Match</h2>
+            <div class="game-chips">
+              <span class="chip chip-amber">Speed</span>
+              <span class="chip chip-amber">Processing Speed</span>
+              <span class="chip chip-blue">Decision-Making</span>
+            </div>
+          </div>
+        </div>
+        <div class="game-body-grid">
+          <div class="research-block">
+            <h4>What It Does</h4>
+            <p>Two cards appear sequentially. The player must instantly judge whether the current card matches the previous one and tap Yes or No before a countdown expires. Cards feature colors and shapes, and the response window shortens with each level  forcing the brain to operate at increasing perceptual speed.</p>
+          </div>
+          <div class="research-block">
+            <h4>Cognitive Target</h4>
+            <p>Processing speed  the rate at which the brain can perceive, interpret, and respond to information. One of the strongest predictors of intelligence test performance, academic success, and cognitive aging trajectories.</p>
+          </div>
+          <div class="research-block">
+            <h4>Research Foundation</h4>
+            <p>Salthouse (1996) proposed the processing-speed theory of cognitive aging  demonstrating that decline in mental speed is the primary driver of age-related cognitive deterioration. Jensen (2006) showed processing speed (measured by simple and choice reaction times) correlates strongly with IQ. Edwards et al. (2002) demonstrated that speed-of-processing training in older adults improved everyday functional performance. The game's match/mismatch design specifically exercises the comparison process central to rapid perception.</p>
+            <div class="citation">Salthouse, T.A. (1996). The processing-speed theory of adult age differences in cognition. Psychological Review, 103(3), 403. | Jensen, A.R. (2006). Clocking the Mind: Mental Chronometry and Individual Differences. Elsevier.</div>
+          </div>
+          <div class="research-block">
+            <h4>Expected Outcomes</h4>
+            <ul class="outcome-list">
+              <li>Faster perceptual discrimination and comparison</li>
+              <li>Reduced choice reaction time</li>
+              <li>Improved performance on time-pressured cognitive tasks</li>
+              <li>Better sustained performance under deadline pressure</li>
+            </ul>
+          </div>
+          <div class="research-block full">
+            <h4>Why We Integrated It</h4>
+            <p>Cognitive slowness  the feeling of your brain "lagging"  is a key symptom of poor focus. By repeatedly training the brain to make rapid accurate judgments under time pressure, Speed Match directly improves the mental sharpness that most people associate with being "on" versus "foggy." It is also one of the most enjoyable and immediately rewarding training formats, critical for sustaining long-term engagement.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Number Stream -->
+      <div class="game-research-card reveal" id="number-stream">
+        <div class="game-card-header">
+          <div class="game-icon-box" style="background:rgba(236,72,153,0.15);">🔢</div>
+          <div class="game-card-meta">
+            <h2>Number Stream</h2>
+            <div class="game-chips">
+              <span class="chip chip-pink">Speed</span>
+              <span class="chip chip-amber">Mental Arithmetic</span>
+              <span class="chip chip-purple">Working Memory</span>
+            </div>
+          </div>
+        </div>
+        <div class="game-body-grid">
+          <div class="research-block">
+            <h4>What It Does</h4>
+            <p>Math equations (addition, subtraction, multiplication) scroll down the screen. The player must solve each one and tap the correct answer from four choices before the equation falls off the bottom. Speed and accuracy both score; equations grow in complexity and fall faster across levels.</p>
+          </div>
+          <div class="research-block">
+            <h4>Cognitive Target</h4>
+            <p>Mental arithmetic under time pressure  a compound task demanding working memory (holding intermediate values), processing speed (generating answers quickly), and selective attention (filtering answer choices). This is the rare game that trains three cognitive systems simultaneously.</p>
+          </div>
+          <div class="research-block">
+            <h4>Research Foundation</h4>
+            <p>Ashcraft & Faust (1994) showed that math anxiety impairs working memory during arithmetic by occupying the central executive's attentional resources. DeStefano & LeFevre (2004) demonstrated that complex arithmetic relies heavily on phonological and visuospatial working memory buffers. Time-pressured arithmetic training is used in dyscalculia interventions (Wilson et al., 2006) and consistently improves working memory and processing speed in parallel.</p>
+            <div class="citation">Ashcraft, M.H. & Faust, M.W. (1994). Mathematics anxiety and mental arithmetic performance. Cognition & Emotion, 8(2), 97–125. | DeStefano, D. & LeFevre, J.A. (2004). The role of working memory in mental arithmetic. European J. Cognitive Psychology, 16(3), 353–386.</div>
+          </div>
+          <div class="research-block">
+            <h4>Expected Outcomes</h4>
+            <ul class="outcome-list">
+              <li>Faster mental arithmetic and numerical fluency</li>
+              <li>Increased working memory capacity under dual-task conditions</li>
+              <li>Improved time-pressure performance across cognitive domains</li>
+              <li>Reduced math anxiety through desensitization and mastery</li>
+            </ul>
+          </div>
+          <div class="research-block full">
+            <h4>Why We Integrated It</h4>
+            <p>Number Stream is LockedIn's highest-cognitive-load speed task, demanding simultaneous engagement of working memory, processing speed, and attention in every trial. This makes it uniquely effective for inducing neuroplastic change quickly  the brain must form new shortcuts and automatize processes to keep up with increasing speed, producing rapid measurable gains in cognitive efficiency.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  LOGIC GAMES  -->
+    <div id="section-logic" class="cat-logic" style="margin-top:48px;">
+      <h2 class="reveal" style="font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#A5B4FC;margin-bottom:20px;">
+        🔵 Logic & Executive Function Domain
+      </h2>
+
+      <!-- Sudoku -->
+      <div class="game-research-card reveal" id="sudoku">
+        <div class="game-card-header">
+          <div class="game-icon-box" style="background:rgba(99,102,241,0.15);">🔷</div>
+          <div class="game-card-meta">
+            <h2>Sudoku</h2>
+            <div class="game-chips">
+              <span class="chip chip-indigo">Logic</span>
+              <span class="chip chip-indigo">Executive Function</span>
+              <span class="chip chip-purple">Planning</span>
+            </div>
+          </div>
+        </div>
+        <div class="game-body-grid">
+          <div class="research-block">
+            <h4>What It Does</h4>
+            <p>A 9×9 constraint-satisfaction puzzle where each row, column, and 3×3 box must contain digits 1–9 without repetition. Three difficulty modes (Easy, Medium, Hard) with timed completion, mistake tracking, and optional hints. The player must simultaneously apply logical deduction, hypothesis testing, and constraint propagation.</p>
+          </div>
+          <div class="research-block">
+            <h4>Cognitive Target</h4>
+            <p>Executive function  specifically planning, cognitive flexibility, and constraint satisfaction reasoning. These are the highest-order cognitive skills, residing in the prefrontal cortex and underlying all complex goal-directed behavior.</p>
+          </div>
+          <div class="research-block">
+            <h4>Research Foundation</h4>
+            <p>Diamond (2013) in her comprehensive Annual Review paper identified planning, cognitive flexibility, and inhibition as the three core executive functions, all mediated by the prefrontal cortex. Stuss & Benson (1986) established that frontal lobe integrity is necessary for logical constraint application. Research on puzzle-solving (specifically number logic puzzles) by Verghese et al. (2003) in the New England Journal of Medicine showed that regular cognitively stimulating leisure activities reduce dementia risk by 47%  with logic puzzles showing the strongest association.</p>
+            <div class="citation">Diamond, A. (2013). Executive functions. Annual Review of Psychology, 64, 135–168. | Verghese, J. et al. (2003). Leisure activities and the risk of dementia in the elderly. NEJM, 348(25), 2508–2516.</div>
+          </div>
+          <div class="research-block">
+            <h4>Expected Outcomes</h4>
+            <ul class="outcome-list">
+              <li>Improved logical deduction and constraint reasoning</li>
+              <li>Greater cognitive flexibility in problem-solving approaches</li>
+              <li>Stronger prefrontal planning circuits</li>
+              <li>Reduced risk of cognitive decline with regular long-term engagement</li>
+            </ul>
+          </div>
+          <div class="research-block full">
+            <h4>Why We Integrated It</h4>
+            <p>While most LockedIn games are short, intense, reaction-based training stimuli, Sudoku provides the sustained, slow, deep executive engagement that completes the cognitive training spectrum. Real-world cognitive performance requires not just fast reflexes and good memory, but also the capacity for sustained deliberate reasoning  and Sudoku is the premier training vehicle for exactly that.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  References  -->
+    <div style="margin-top:80px;" class="reveal">
+      <h2 style="font-size:clamp(24px,3vw,36px);margin-bottom:8px;">Key References</h2>
+      <p style="color:var(--text-2);margin-bottom:32px;">Primary peer-reviewed sources informing LockedIn's design</p>
+      <div class="ref-grid">
+        <div class="ref-item"><strong>Baddeley & Hitch (1974)</strong>Working memory model  visuospatial sketchpad and central executive. Psychology of Learning and Motivation, 8, 47–89.</div>
+        <div class="ref-item"><strong>Jaeggi et al. (2008)</strong>N-back training improves fluid intelligence. Proceedings of the National Academy of Sciences, 105(19), 6829–6833.</div>
+        <div class="ref-item"><strong>Stroop (1935)</strong>Studies of interference in serial verbal reactions  the original Stroop paradigm. J. Experimental Psychology, 18(6), 643.</div>
+        <div class="ref-item"><strong>Diamond (2013)</strong>Executive functions: comprehensive review. Annual Review of Psychology, 64, 135–168.</div>
+        <div class="ref-item"><strong>Klingberg et al. (2002)</strong>Working memory training in ADHD produces structural brain changes. J. Clin. Exp. Neuropsychol., 24(6), 781–791.</div>
+        <div class="ref-item"><strong>Pylyshyn & Storm (1988)</strong>Parallel tracking mechanism for multiple objects. Spatial Vision, 3(3), 179–197.</div>
+        <div class="ref-item"><strong>Salthouse (1996)</strong>Processing-speed theory of cognitive aging. Psychological Review, 103(3), 403.</div>
+        <div class="ref-item"><strong>Eriksen & Eriksen (1974)</strong>Flanker interference effect  selective attention paradigm. Perception & Psychophysics, 16(1), 143–149.</div>
+        <div class="ref-item"><strong>Aron & Poldrack (2005)</strong>Neural circuitry of response inhibition  right inferior frontal cortex. Biological Psychiatry, 57(11), 1285–1292.</div>
+        <div class="ref-item"><strong>Nissen & Bullemer (1987)</strong>Sequence learning and attentional requirements. Cognitive Psychology, 19(1), 1–32.</div>
+        <div class="ref-item"><strong>Melby-Lervåg et al. (2013)</strong>Meta-analysis of working memory training. Developmental Psychology, 49(2), 270–291.</div>
+        <div class="ref-item"><strong>Verghese et al. (2003)</strong>Leisure cognitive activities and dementia risk. New England Journal of Medicine, 348(25), 2508–2516.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  Footer  -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3><span class="gradient-text">LockedIn</span></h3>
+        <p>Science-backed cognitive training. Every feature grounded in peer-reviewed research.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <a href="index.html">Home</a>
+        <a href="research.html">The Science</a>
+        <a href="games.html">Games</a>
+        <a href="features.html">Features</a>
+        <a href="download.html">Download</a>
+      </div>
+      <div class="footer-col">
+        <h4>Research</h4>
+        <a href="#memory-matrix">Memory Matrix</a>
+        <a href="#color-match">Stroop Task</a>
+        <a href="#n-back">N-Back</a>
+        <a href="#sudoku">Sudoku</a>
+      </div>
+      <div class="footer-col">
+        <h4>Domains</h4>
+        <a href="#section-memory">Memory</a>
+        <a href="#section-attention">Attention</a>
+        <a href="#section-speed">Speed</a>
+        <a href="#section-logic">Logic</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 LockedIn. All rights reserved.</span>
+      <span>Built on Peer-Reviewed Cognitive Science</span>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+function filterGames(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const sections = ['memory','attention','speed','logic'];
+  sections.forEach(s => {
+    const el = document.getElementById('section-' + s);
+    if (el) el.style.display = (cat === 'all' || cat === s) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

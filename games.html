@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LockedIn  Cognitive Training Games</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-hero {
+      padding: 140px 0 80px;
+      position: relative; overflow: hidden;
+      text-align: center;
+    }
+    .page-hero h1 { font-size: clamp(36px, 6vw, 68px); margin-bottom: 20px; }
+    .page-hero p { font-size: 18px; color: var(--text-2); max-width: 620px; margin: 0 auto; line-height: 1.7; }
+    .page-hero-glow {
+      position: absolute; width: 700px; height: 400px;
+      background: radial-gradient(ellipse, rgba(123,111,255,0.12) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      pointer-events: none;
+    }
+
+    /*  Domain pills  */
+    .domain-pills { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 64px; }
+    .domain-pill {
+      display: flex; flex-direction: column; align-items: center;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 20px 28px; min-width: 140px;
+      cursor: pointer; transition: var(--transition); text-decoration: none;
+    }
+    .domain-pill .icon { font-size: 28px; margin-bottom: 8px; }
+    .domain-pill .label { font-size: 13px; font-weight: 600; }
+    .domain-pill .count { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+    .domain-pill.memory:hover  { border-color: rgba(123,111,255,0.5); background: rgba(123,111,255,0.08); }
+    .domain-pill.attention:hover { border-color: rgba(16,185,129,0.5); background: rgba(16,185,129,0.08); }
+    .domain-pill.speed:hover   { border-color: rgba(245,158,11,0.5); background: rgba(245,158,11,0.08); }
+    .domain-pill.logic:hover   { border-color: rgba(99,102,241,0.5); background: rgba(99,102,241,0.08); }
+
+    /*  Games grid  */
+    .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; }
+
+    .game-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r-lg); overflow: hidden;
+      transition: var(--transition); position: relative;
+    }
+    .game-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+
+    .game-card-top {
+      padding: 28px 28px 0;
+      display: flex; gap: 16px; align-items: flex-start;
+    }
+    .game-big-icon {
+      width: 64px; height: 64px; border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; flex-shrink: 0;
+    }
+    .game-card-info { flex: 1; }
+    .game-card-info h3 { font-size: 20px; margin-bottom: 6px; }
+    .game-chips-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+
+    .game-card-body { padding: 20px 28px 24px; }
+    .game-card-body .desc { font-size: 14px; color: var(--text-2); line-height: 1.7; margin-bottom: 16px; }
+
+    .game-details-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      margin-bottom: 16px;
+    }
+    .game-detail {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--r); padding: 12px 14px;
+    }
+    .game-detail .detail-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px; }
+    .game-detail .detail-val { font-size: 13px; font-weight: 500; color: var(--text); }
+
+    .game-card-footer {
+      padding: 16px 28px 24px;
+      border-top: 1px solid var(--border);
+    }
+    .game-card-footer h4 { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 8px; }
+    .benefit-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .benefit-tag {
+      font-size: 11px; font-weight: 500; padding: 4px 10px;
+      border-radius: 99px; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); color: var(--text-2);
+    }
+
+    /* color accents per game */
+    .game-card.memory  .game-card-top { border-top: 3px solid #7B6FFF; }
+    .game-card.attention .game-card-top { border-top: 3px solid #10B981; }
+    .game-card.speed   .game-card-top { border-top: 3px solid #F59E0B; }
+    .game-card.logic   .game-card-top { border-top: 3px solid #6366F1; }
+    .game-card.daily   .game-card-top { border-top: 3px solid #EC4899; }
+
+    /* difficulty dots */
+    .diff-dots { display: flex; gap: 4px; margin-top: 6px; }
+    .diff-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+    .diff-dot.filled { background: var(--purple); }
+    .game-card.speed .diff-dot.filled { background: var(--amber); }
+    .game-card.logic .diff-dot.filled { background: var(--indigo); }
+    .game-card.attention .diff-dot.filled { background: var(--emerald); }
+    .game-card.daily .diff-dot.filled { background: var(--pink); }
+
+    /*  Section label  */
+    .domain-section-label {
+      display: flex; align-items: center; gap: 16px;
+      margin: 56px 0 24px;
+    }
+    .domain-section-label h2 { font-size: 22px; white-space: nowrap; }
+    .domain-section-label .line { flex: 1; height: 1px; background: var(--border); }
+
+    /*  How training works  */
+    .training-flow { display: flex; gap: 0; margin: 48px 0; }
+    .flow-step {
+      flex: 1; text-align: center; padding: 0 16px;
+      position: relative;
+    }
+    .flow-step::after {
+      content: '→';
+      position: absolute; right: -12px; top: 28px;
+      color: var(--border-glow); font-size: 20px;
+    }
+    .flow-step:last-child::after { display: none; }
+    .flow-num {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--grad); display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 800; font-family: 'Space Grotesk',sans-serif;
+      margin: 0 auto 14px;
+    }
+    .flow-step h4 { font-size: 15px; margin-bottom: 6px; }
+    .flow-step p { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+
+    @media(max-width:768px){
+      .games-grid{grid-template-columns:1fr;}
+      .training-flow{flex-direction:column;gap:24px;}
+      .flow-step::after{display:none;}
+      .domain-pills{gap:10px;}
+      .domain-pill{min-width:110px;padding:16px 18px;}
+    }
+  </style>
+</head>
+<body>
+
+<!--  Navigation  -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">🧠</div>
+      LockedIn
+    </a>
+    <div class="nav-links">
+      <a href="index.html"    class="nav-link">Home</a>
+      <a href="research.html" class="nav-link">Science</a>
+      <a href="games.html"    class="nav-link">Games</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="download.html" class="nav-link nav-cta">⬇ Download APK</a>
+    </div>
+    <button class="nav-toggle" id="navToggle">☰</button>
+  </div>
+  <div class="nav-mobile" id="mobileNav">
+    <a href="index.html"    class="nav-link">Home</a>
+    <a href="research.html" class="nav-link">Science</a>
+    <a href="games.html"    class="nav-link">Games</a>
+    <a href="features.html" class="nav-link">Features</a>
+    <a href="download.html" class="nav-link nav-cta">⬇ Download APK</a>
+  </div>
+</nav>
+
+<!--  Hero  -->
+<div class="page-hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="page-hero-glow"></div>
+  <div class="container" style="position:relative;z-index:1;">
+    <span class="section-label">🎮 10 Cognitive Games</span>
+    <h1>Train Smarter,<br><span class="gradient-text">Not Just Harder</span></h1>
+    <p>Each game is a precision instrument targeting a specific cognitive system  built on validated neuropsychological paradigms and designed for daily engagement.</p>
+  </div>
+</div>
+
+<!--  Domain overview  -->
+<section class="section-sm">
+  <div class="container">
+    <div class="domain-pills reveal">
+      <div class="domain-pill memory">
+        <div class="icon">🟣</div>
+        <div class="label" style="color:var(--purple-light)">Memory</div>
+        <div class="count">3 games</div>
+      </div>
+      <div class="domain-pill attention">
+        <div class="icon">🟢</div>
+        <div class="label" style="color:var(--emerald)">Attention</div>
+        <div class="count">4 games</div>
+      </div>
+      <div class="domain-pill speed">
+        <div class="icon">🟡</div>
+        <div class="label" style="color:var(--amber)">Speed</div>
+        <div class="count">2 games</div>
+      </div>
+      <div class="domain-pill logic">
+        <div class="icon">🔵</div>
+        <div class="label" style="color:#A5B4FC">Logic</div>
+        <div class="count">1 game</div>
+      </div>
+    </div>
+
+    <!-- How Training Works -->
+    <div class="card reveal" style="margin-bottom:48px;">
+      <h3 style="font-size:20px;margin-bottom:8px;text-align:center;">How Cognitive Training Works</h3>
+      <p style="font-size:14px;color:var(--text-2);text-align:center;margin-bottom:32px;">The science of cognitive improvement in 4 steps</p>
+      <div class="training-flow">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <h4>Challenge</h4>
+          <p>Task demands exceed current ability  activating the brain's stress response and signaling for adaptation</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <h4>Strain</h4>
+          <p>Neural circuits fire intensely under cognitive load  synaptic connections strengthen through long-term potentiation</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <h4>Adapt</h4>
+          <p>The brain rewires: axons myelinate, dendrites branch, and the targeted network becomes structurally more efficient</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <h4>Transfer</h4>
+          <p>Improvements in trained tasks generalize to untrained real-world tasks using the same neural circuits</p>
+        </div>
+      </div>
+    </div>
+
+    <!--  Memory Games  -->
+    <div class="domain-section-label reveal">
+      <h2 style="color:var(--purple-light);">🟣 Memory</h2>
+      <div class="line"></div>
+      <a href="research.html#section-memory" style="font-size:13px;color:var(--text-3);text-decoration:none;white-space:nowrap;">View research →</a>
+    </div>
+
+    <div class="games-grid">
+      <!-- Memory Matrix -->
+      <div class="game-card memory reveal reveal-delay-1">
+        <div class="game-card-top">
+          <div class="game-big-icon" style="background:rgba(123,111,255,0.15);">🔲</div>
+          <div class="game-card-info">
+            <h3>Memory Matrix</h3>
+            <div class="game-chips-row">
+              <span class="chip chip-purple">Memory</span>
+              <span class="chip chip-blue">Visual-Spatial</span>
+            </div>
+            <div class="diff-dots">
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <p class="desc">A grid lights up with a pattern of cells. Memorize it  then recreate it perfectly from memory. Each level increases the grid size and sequence complexity, keeping your working memory operating at its ceiling.</p>
+          <div class="game-details-grid">
+            <div class="game-detail">
+              <div class="detail-label">Levels</div>
+              <div class="detail-val">10 Levels</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Grid Size</div>
+              <div class="detail-val">3×3 → 4×4</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Trains</div>
+              <div class="detail-val">Working Memory</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Science Basis</div>
+              <div class="detail-val">Baddeley (1974)</div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-footer">
+          <h4>Cognitive Benefits</h4>
+          <div class="benefit-tags">
+            <span class="benefit-tag">Working Memory Capacity</span>
+            <span class="benefit-tag">Pattern Recognition</span>
+            <span class="benefit-tag">Fluid Intelligence</span>
+            <span class="benefit-tag">Focus Endurance</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pattern Trail -->
+      <div class="game-card memory reveal reveal-delay-2">
+        <div class="game-card-top">
+          <div class="game-big-icon" style="background:rgba(59,130,246,0.15);">🔵</div>
+          <div class="game-card-info">
+            <h3>Pattern Trail</h3>
+            <div class="game-chips-row">
+              <span class="chip chip-blue">Memory</span>
+              <span class="chip chip-purple">Sequence</span>
+            </div>
+            <div class="diff-dots">
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <p class="desc">Dots appear one-by-one across a grid in a specific spatial order. Watch. Remember. Then tap them back in the exact sequence they appeared  from 3 dots on an easy level all the way to 12 dots on level 10.</p>
+          <div class="game-details-grid">
+            <div class="game-detail">
+              <div class="detail-label">Levels</div>
+              <div class="detail-val">10 Levels</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Sequence Length</div>
+              <div class="detail-val">3 → 12 dots</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Trains</div>
+              <div class="detail-val">Spatial Memory</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Science Basis</div>
+              <div class="detail-val">Corsi (1972)</div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-footer">
+          <h4>Cognitive Benefits</h4>
+          <div class="benefit-tags">
+            <span class="benefit-tag">Sequential Memory</span>
+            <span class="benefit-tag">Spatial Navigation</span>
+            <span class="benefit-tag">Hippocampal Strength</span>
+            <span class="benefit-tag">Planning Ability</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual N-Back -->
+      <div class="game-card daily reveal reveal-delay-3">
+        <div class="game-card-top">
+          <div class="game-big-icon" style="background:rgba(236,72,153,0.15);">🟪</div>
+          <div class="game-card-info">
+            <h3>Visual N-Back</h3>
+            <div class="game-chips-row">
+              <span class="chip chip-pink">Daily Challenge</span>
+              <span class="chip chip-purple">Working Memory</span>
+            </div>
+            <div class="diff-dots">
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <p class="desc">A 3×3 grid lights up one cell at a time. Your task: judge whether the current cell matches the one that lit up 2 steps ago. 30 trials. 2 seconds each. Requires your working memory to constantly update  this is the most demanding game in LockedIn.</p>
+          <div class="game-details-grid">
+            <div class="game-detail">
+              <div class="detail-label">Format</div>
+              <div class="detail-val">30 Trials / Day</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Window</div>
+              <div class="detail-val">2 sec / trial</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Trains</div>
+              <div class="detail-val">Fluid Intelligence</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Science Basis</div>
+              <div class="detail-val">Jaeggi (2008)</div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-footer">
+          <h4>Cognitive Benefits</h4>
+          <div class="benefit-tags">
+            <span class="benefit-tag">Fluid Intelligence</span>
+            <span class="benefit-tag">WM Updating Speed</span>
+            <span class="benefit-tag">Sustained Attention</span>
+            <span class="benefit-tag">ADHD Reduction</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  Attention Games  -->
+    <div class="domain-section-label reveal" style="margin-top:64px;">
+      <h2 style="color:var(--emerald);">🟢 Attention</h2>
+      <div class="line"></div>
+      <a href="research.html#section-attention" style="font-size:13px;color:var(--text-3);text-decoration:none;white-space:nowrap;">View research →</a>
+    </div>
+
+    <div class="games-grid">
+      <!-- Color Match -->
+      <div class="game-card attention reveal reveal-delay-1">
+        <div class="game-card-top">
+          <div class="game-big-icon" style="background:rgba(16,185,129,0.15);">🎨</div>
+          <div class="game-card-info">
+            <h3>Color Match</h3>
+            <div class="game-chips-row">
+              <span class="chip chip-emerald">Attention</span>
+              <span class="chip chip-emerald">Stroop Task</span>
+            </div>
+            <div class="diff-dots">
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <p class="desc">The word "RED" appears in blue ink. Tap the button that matches the ink color  not the word. Your brain's automatic reading instinct fights against you. Levels progress from color matching to shape matching to both simultaneously.</p>
+          <div class="game-details-grid">
+            <div class="game-detail">
+              <div class="detail-label">Levels</div>
+              <div class="detail-val">10 Levels</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Conflict Type</div>
+              <div class="detail-val">Color + Shape</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Trains</div>
+              <div class="detail-val">Inhibitory Control</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Science Basis</div>
+              <div class="detail-val">Stroop (1935)</div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-footer">
+          <h4>Cognitive Benefits</h4>
+          <div class="benefit-tags">
+            <span class="benefit-tag">Inhibitory Control</span>
+            <span class="benefit-tag">Cognitive Flexibility</span>
+            <span class="benefit-tag">Distraction Resistance</span>
+            <span class="benefit-tag">ACC Strengthening</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Train of Thought -->
+      <div class="game-card attention reveal reveal-delay-2">
+        <div class="game-card-top">
+          <div class="game-big-icon" style="background:rgba(91,143,255,0.15);">🚂</div>
+          <div class="game-card-info">
+            <h3>Train of Thought</h3>
+            <div class="game-chips-row">
+              <span class="chip chip-blue">Attention</span>
+              <span class="chip chip-blue">Multi-Tracking</span>
+            </div>
+            <div class="diff-dots">
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <p class="desc">Colored trains race toward colored stations on a branching track network. Tap junctions to switch tracks and route each train to its matching station  before it crashes. Multiple trains run simultaneously, demanding divided attention across moving objects in real-time.</p>
+          <div class="game-details-grid">
+            <div class="game-detail">
+              <div class="detail-label">Levels</div>
+              <div class="detail-val">10 Levels</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Simultaneous Objects</div>
+              <div class="detail-val">Up to 6</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Trains</div>
+              <div class="detail-val">Multi-Object Tracking</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Science Basis</div>
+              <div class="detail-val">Pylyshyn (1988)</div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-footer">
+          <h4>Cognitive Benefits</h4>
+          <div class="benefit-tags">
+            <span class="benefit-tag">Divided Attention</span>
+            <span class="benefit-tag">Attentional Capacity</span>
+            <span class="benefit-tag">Spatial Reasoning</span>
+            <span class="benefit-tag">Multi-Tasking</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Go No-Go -->
+      <div class="game-card daily reveal reveal-delay-3">
+        <div class="game-card-top">
+          <div class="game-big-icon" style="background:rgba(16,185,129,0.12);">🟢</div>
+          <div class="game-card-info">
+            <h3>Go / No-Go</h3>
+            <div class="game-chips-row">
+              <span class="chip chip-pink">Daily Challenge</span>
+              <span class="chip chip-emerald">Impulse Control</span>
+            </div>
+            <div class="diff-dots">
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <p class="desc">Tap the green circle. Never tap the red one. Straightforward  until the pace doubles and your trigger finger itches. This game directly trains the brain's "stop signal" circuit in the right inferior frontal cortex, the same system ADHD weakens.</p>
+          <div class="game-details-grid">
+            <div class="game-detail">
+              <div class="detail-label">Format</div>
+              <div class="detail-val">60-Second Session</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Pace</div>
+              <div class="detail-val">Doubles Over Time</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Trains</div>
+              <div class="detail-val">Response Inhibition</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Science Basis</div>
+              <div class="detail-val">Aron (2005)</div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-footer">
+          <h4>Cognitive Benefits</h4>
+          <div class="benefit-tags">
+            <span class="benefit-tag">Response Inhibition</span>
+            <span class="benefit-tag">Impulse Control</span>
+            <span class="benefit-tag">ADHD Symptom Reduction</span>
+            <span class="benefit-tag">rIFC Strengthening</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flanker -->
+      <div class="game-card daily reveal reveal-delay-1">
+        <div class="game-card-top">
+          <div class="game-big-icon" style="background:rgba(6,182,212,0.15);">↔️</div>
+          <div class="game-card-info">
+            <h3>Flanker Task</h3>
+            <div class="game-chips-row">
+              <span class="chip chip-pink">Daily Challenge</span>
+              <span class="chip chip-cyan">Selective Attention</span>
+            </div>
+            <div class="diff-dots">
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <p class="desc">Five arrows. Only the center one matters. Respond to its direction  left or right  while ignoring the surrounding four flanker arrows that either agree or deliberately mislead. Incongruent trials force your anterior cingulate cortex to resolve attentional conflict.</p>
+          <div class="game-details-grid">
+            <div class="game-detail">
+              <div class="detail-label">Trials</div>
+              <div class="detail-val">30 Trials / Day</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Trial Types</div>
+              <div class="detail-val">Congruent + Incongruent</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Trains</div>
+              <div class="detail-val">Selective Attention</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Science Basis</div>
+              <div class="detail-val">Eriksen (1974)</div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-footer">
+          <h4>Cognitive Benefits</h4>
+          <div class="benefit-tags">
+            <span class="benefit-tag">Selective Attention</span>
+            <span class="benefit-tag">Conflict Monitoring</span>
+            <span class="benefit-tag">Noise Filtering</span>
+            <span class="benefit-tag">Executive Control Network</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  Speed Games  -->
+    <div class="domain-section-label reveal" style="margin-top:64px;">
+      <h2 style="color:var(--amber);">🟡 Processing Speed</h2>
+      <div class="line"></div>
+      <a href="research.html#section-speed" style="font-size:13px;color:var(--text-3);text-decoration:none;white-space:nowrap;">View research →</a>
+    </div>
+
+    <div class="games-grid">
+      <!-- Speed Match -->
+      <div class="game-card speed reveal reveal-delay-1">
+        <div class="game-card-top">
+          <div class="game-big-icon" style="background:rgba(245,158,11,0.15);">⚡</div>
+          <div class="game-card-info">
+            <h3>Speed Match</h3>
+            <div class="game-chips-row">
+              <span class="chip chip-amber">Speed</span>
+              <span class="chip chip-amber">Decision-Making</span>
+            </div>
+            <div class="diff-dots">
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <p class="desc">Two cards flash in sequence. Instantly judge: does this card match the last one? Tap Yes or No before the timer expires  then do it again, and again, faster every level. Sharpens the mental speed that determines how quickly you can process and react to any new information.</p>
+          <div class="game-details-grid">
+            <div class="game-detail">
+              <div class="detail-label">Levels</div>
+              <div class="detail-val">10 Levels</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Stimuli</div>
+              <div class="detail-val">Colors + Shapes</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Trains</div>
+              <div class="detail-val">Processing Speed</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Science Basis</div>
+              <div class="detail-val">Salthouse (1996)</div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-footer">
+          <h4>Cognitive Benefits</h4>
+          <div class="benefit-tags">
+            <span class="benefit-tag">Processing Speed</span>
+            <span class="benefit-tag">Reaction Time</span>
+            <span class="benefit-tag">Rapid Perception</span>
+            <span class="benefit-tag">Mental Sharpness</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Number Stream -->
+      <div class="game-card speed reveal reveal-delay-2">
+        <div class="game-card-top">
+          <div class="game-big-icon" style="background:rgba(236,72,153,0.15);">🔢</div>
+          <div class="game-card-info">
+            <h3>Number Stream</h3>
+            <div class="game-chips-row">
+              <span class="chip chip-pink">Speed</span>
+              <span class="chip chip-amber">Mental Math</span>
+            </div>
+            <div class="diff-dots">
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+              <div class="diff-dot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <p class="desc">Math equations rain from the top of the screen. Solve each one and tap the correct answer from four options before it hits the bottom. Speed and accuracy both score. The pace accelerates and the math gets harder  training mental arithmetic under genuine cognitive pressure.</p>
+          <div class="game-details-grid">
+            <div class="game-detail">
+              <div class="detail-label">Levels</div>
+              <div class="detail-val">10 Levels</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Operations</div>
+              <div class="detail-val">+  −  ×</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Trains</div>
+              <div class="detail-val">Mental Arithmetic</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Science Basis</div>
+              <div class="detail-val">Ashcraft (1994)</div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-footer">
+          <h4>Cognitive Benefits</h4>
+          <div class="benefit-tags">
+            <span class="benefit-tag">Numerical Fluency</span>
+            <span class="benefit-tag">Speed + Accuracy</span>
+            <span class="benefit-tag">Working Memory</span>
+            <span class="benefit-tag">Dual-Task Performance</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  Logic Games  -->
+    <div class="domain-section-label reveal" style="margin-top:64px;">
+      <h2 style="color:#A5B4FC;">🔵 Logic &amp; Executive Function</h2>
+      <div class="line"></div>
+      <a href="research.html#section-logic" style="font-size:13px;color:var(--text-3);text-decoration:none;white-space:nowrap;">View research →</a>
+    </div>
+
+    <div class="games-grid">
+      <!-- Sudoku -->
+      <div class="game-card logic reveal reveal-delay-1">
+        <div class="game-card-top">
+          <div class="game-big-icon" style="background:rgba(99,102,241,0.15);">🔷</div>
+          <div class="game-card-info">
+            <h3>Sudoku</h3>
+            <div class="game-chips-row">
+              <span class="chip chip-indigo">Logic</span>
+              <span class="chip chip-indigo">Executive Function</span>
+            </div>
+            <div class="diff-dots">
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+              <div class="diff-dot filled"></div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <p class="desc">Fill a 9×9 grid so every row, column, and 3×3 box contains digits 1–9 without repeating. Three difficulty tiers  Easy, Medium, Hard  with a timer, mistake counter, and optional hints. The only LockedIn game that demands sustained deliberate reasoning over an extended session.</p>
+          <div class="game-details-grid">
+            <div class="game-detail">
+              <div class="detail-label">Difficulties</div>
+              <div class="detail-val">Easy / Medium / Hard</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Grid</div>
+              <div class="detail-val">9×9 (81 cells)</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Trains</div>
+              <div class="detail-val">Executive Function</div>
+            </div>
+            <div class="game-detail">
+              <div class="detail-label">Science Basis</div>
+              <div class="detail-val">Diamond (2013)</div>
+            </div>
+          </div>
+        </div>
+        <div class="game-card-footer">
+          <h4>Cognitive Benefits</h4>
+          <div class="benefit-tags">
+            <span class="benefit-tag">Logical Reasoning</span>
+            <span class="benefit-tag">Planning</span>
+            <span class="benefit-tag">Cognitive Flexibility</span>
+            <span class="benefit-tag">Dementia Prevention</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="card text-center mt-48 reveal" style="background:linear-gradient(135deg,rgba(123,111,255,0.1),rgba(236,72,153,0.06));border-color:rgba(123,111,255,0.2);">
+      <h2 style="font-size:clamp(24px,3.5vw,40px);margin-bottom:16px;">Ready to Start Training?</h2>
+      <p style="color:var(--text-2);max-width:520px;margin:0 auto 32px;font-size:16px;">10 games. 10 levels each. Daily challenges. All designed to measurably improve how your brain performs every day.</p>
+      <a href="download.html" class="btn btn-primary btn-lg">⬇ Download LockedIn APK</a>
+    </div>
+  </div>
+</section>
+
+<!--  Footer  -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3><span class="gradient-text">LockedIn</span></h3>
+        <p>10 cognitive games. 4 brain domains. One platform built on peer-reviewed neuroscience.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <a href="index.html">Home</a>
+        <a href="research.html">The Science</a>
+        <a href="games.html">Games</a>
+        <a href="features.html">Features</a>
+        <a href="download.html">Download</a>
+      </div>
+      <div class="footer-col">
+        <h4>Memory Games</h4>
+        <a href="#memory-matrix">Memory Matrix</a>
+        <a href="#pattern-trail">Pattern Trail</a>
+        <a href="#n-back">Visual N-Back</a>
+      </div>
+      <div class="footer-col">
+        <h4>Other Games</h4>
+        <a href="#color-match">Color Match</a>
+        <a href="#train-of-thought">Train of Thought</a>
+        <a href="#speed-match">Speed Match</a>
+        <a href="#sudoku">Sudoku</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 LockedIn. All rights reserved.</span>
+      <span>Built on Peer-Reviewed Cognitive Science</span>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

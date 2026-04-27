@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LockedIn  Features</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-hero {
+      padding: 140px 0 80px;
+      position: relative; overflow: hidden;
+      text-align: center;
+    }
+    .page-hero h1 { font-size: clamp(36px, 6vw, 68px); margin-bottom: 20px; }
+    .page-hero p { font-size: 18px; color: var(--text-2); max-width: 620px; margin: 0 auto; line-height: 1.7; }
+    .page-hero-glow {
+      position: absolute; width: 700px; height: 400px;
+      background: radial-gradient(ellipse, rgba(123,111,255,0.1) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      pointer-events: none;
+    }
+
+    /*  Feature section  */
+    .feature-section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .feature-section:last-of-type { border-bottom: none; }
+
+    .feature-split {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 72px;
+      align-items: center;
+    }
+    .feature-split.reverse { direction: rtl; }
+    .feature-split.reverse > * { direction: ltr; }
+
+    .feature-text h2 { font-size: clamp(26px, 3.5vw, 40px); margin-bottom: 16px; }
+    .feature-text p { font-size: 16px; color: var(--text-2); line-height: 1.75; margin-bottom: 16px; }
+
+    .feature-list { list-style: none; margin-top: 24px; }
+    .feature-list li {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+      font-size: 14px; color: var(--text-2);
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .feature-list li .check { color: var(--emerald); font-weight: 700; flex-shrink: 0; }
+
+    /*  Visual mockup  */
+    .feature-visual {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 32px;
+      min-height: 360px;
+      display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+    }
+    .feature-visual::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--grad-subtle);
+    }
+    .feature-visual > * { position: relative; z-index: 1; }
+
+    .visual-header {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+    }
+    .visual-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .visual-title { font-size: 13px; font-weight: 600; color: var(--text-2); }
+
+    /* Focus Rooms visual */
+    .room-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--r); padding: 14px 16px;
+      margin-bottom: 10px; display: flex; gap: 12px; align-items: center;
+    }
+    .room-emoji { font-size: 22px; }
+    .room-info h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .room-info p { font-size: 12px; color: var(--text-3); }
+    .room-members { margin-left: auto; display: flex; gap: -4px; }
+    .member-dot {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 2px solid var(--bg-2);
+      margin-left: -6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+    }
+
+    /* Habit visual */
+    .habit-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--r); margin-bottom: 10px;
+    }
+    .habit-icon { font-size: 20px; }
+    .habit-info { flex: 1; }
+    .habit-info h4 { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+    .habit-info .streak { font-size: 11px; color: var(--amber); }
+    .habit-check { color: var(--emerald); font-size: 20px; }
+    .habit-check.pending { color: var(--border); }
+    .week-dots { display: flex; gap: 4px; margin-top: 4px; }
+    .week-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+    .week-dot.done { background: var(--emerald); }
+
+    /* Diagnostic visual */
+    .diag-dimension {
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+      display: flex; gap: 12px; align-items: center;
+    }
+    .diag-dimension:last-child { border-bottom: none; }
+    .diag-icon { font-size: 18px; width: 36px; }
+    .diag-info { flex: 1; }
+    .diag-info h4 { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .diag-score { font-size: 13px; font-weight: 700; min-width: 42px; text-align: right; }
+
+    /* Books visual */
+    .book-card-visual {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--r); padding: 14px;
+      display: flex; gap: 12px; margin-bottom: 10px; align-items: center;
+    }
+    .book-cover {
+      width: 44px; height: 60px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .book-meta { flex: 1; }
+    .book-meta h4 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .book-meta p { font-size: 11px; color: var(--text-3); }
+    .book-badge { font-size: 10px; padding: 3px 8px; border-radius: 99px; margin-top: 6px; display: inline-block; }
+
+    /* Dashboard visual */
+    .score-ring-container { display: flex; justify-content: center; margin-bottom: 24px; }
+    .score-ring {
+      width: 120px; height: 120px; border-radius: 50%;
+      background: conic-gradient(#7B6FFF 0% 78%, rgba(255,255,255,0.08) 78% 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .score-ring::before {
+      content: '';
+      position: absolute; width: 88px; height: 88px;
+      border-radius: 50%; background: var(--bg-2);
+    }
+    .score-ring-val {
+      position: relative; z-index: 1;
+      font-size: 28px; font-weight: 800;
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--grad); -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .stat-row-visual {
+      display: flex; justify-content: space-around; text-align: center; margin-bottom: 20px;
+    }
+    .stat-val-small { font-size: 22px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
+    .stat-lbl-small { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+    @media (max-width: 768px) {
+      .feature-split { grid-template-columns: 1fr; gap: 40px; }
+      .feature-split.reverse { direction: ltr; }
+    }
+  </style>
+</head>
+<body>
+
+<!--  Navigation  -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">🧠</div>
+      LockedIn
+    </a>
+    <div class="nav-links">
+      <a href="index.html"    class="nav-link">Home</a>
+      <a href="research.html" class="nav-link">Science</a>
+      <a href="games.html"    class="nav-link">Games</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="download.html" class="nav-link nav-cta">⬇ Download APK</a>
+    </div>
+    <button class="nav-toggle" id="navToggle">☰</button>
+  </div>
+  <div class="nav-mobile" id="mobileNav">
+    <a href="index.html"    class="nav-link">Home</a>
+    <a href="research.html" class="nav-link">Science</a>
+    <a href="games.html"    class="nav-link">Games</a>
+    <a href="features.html" class="nav-link">Features</a>
+    <a href="download.html" class="nav-link nav-cta">⬇ Download APK</a>
+  </div>
+</nav>
+
+<!--  Hero  -->
+<div class="page-hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="page-hero-glow"></div>
+  <div class="container" style="position:relative;z-index:1;">
+    <span class="section-label">⚡ Full Feature Suite</span>
+    <h1>More Than Games <br><span class="gradient-text">A Complete Cognitive Platform</span></h1>
+    <p>LockedIn combines games, habits, collaborative focus, AI-powered reading, clinical-grade diagnostics, and a unified progress dashboard into one seamless daily practice.</p>
+  </div>
+</div>
+
+<!--  Focus Rooms  -->
+<section class="feature-section" id="rooms">
+  <div class="container">
+    <div class="feature-split">
+      <div class="feature-text reveal">
+        <span class="section-label" style="background:rgba(91,143,255,0.1);border-color:rgba(91,143,255,0.25);color:#7BAAFF;">🏠 Focus Rooms</span>
+        <h2>Focus Better <span class="gradient-text">Together</span></h2>
+        <p>
+          Real-time multiplayer focus sessions where users join or create rooms organized by activity category. The social presence of others working toward similar goals is a powerful behavioral motivator.
+        </p>
+        <p>
+          Research on co-working environments (Crosetto & Filippin, 2013) shows that working alongside peers improves output quality, task persistence, and motivation  even without direct interaction. LockedIn's Focus Rooms replicate this effect in a digital environment.
+        </p>
+        <ul class="feature-list">
+          <li><span class="check">✓</span> 8 categories: Study, Work, Creative, Fitness, Mindfulness, Gaming, Research, Other</li>
+          <li><span class="check">✓</span> Real-time member tracking via WebSocket (STOMP protocol)</li>
+          <li><span class="check">✓</span> Private rooms with invite codes or public discovery</li>
+          <li><span class="check">✓</span> Filter by category, sort by active members</li>
+          <li><span class="check">✓</span> Room capacity settings  fixed or unlimited</li>
+          <li><span class="check">✓</span> Live member count and room descriptions</li>
+        </ul>
+      </div>
+      <div class="feature-visual reveal reveal-delay-2">
+        <div class="visual-header">
+          <div class="visual-dot" style="background:#5B8FFF;"></div>
+          <div class="visual-dot" style="background:rgba(255,255,255,0.2);"></div>
+          <div class="visual-dot" style="background:rgba(255,255,255,0.1);"></div>
+          <div class="visual-title">Focus Rooms</div>
+        </div>
+        <div class="room-card">
+          <div class="room-emoji">📚</div>
+          <div class="room-info">
+            <h4>Exam Season Study Hall</h4>
+            <p>Deep focus  no chat, just flow</p>
+          </div>
+          <div class="room-members">
+            <div class="member-dot" style="background:rgba(123,111,255,0.6);">A</div>
+            <div class="member-dot" style="background:rgba(16,185,129,0.6);">M</div>
+            <div class="member-dot" style="background:rgba(236,72,153,0.6);">+6</div>
+          </div>
+        </div>
+        <div class="room-card">
+          <div class="room-emoji">💼</div>
+          <div class="room-info">
+            <h4>Deep Work  No Distraction</h4>
+            <p>Work · 4/16 members · Public</p>
+          </div>
+          <div class="room-members">
+            <div class="member-dot" style="background:rgba(245,158,11,0.6);">K</div>
+            <div class="member-dot" style="background:rgba(91,143,255,0.6);">J</div>
+            <div class="member-dot" style="background:rgba(16,185,129,0.6);">+2</div>
+          </div>
+        </div>
+        <div class="room-card">
+          <div class="room-emoji">🎨</div>
+          <div class="room-info">
+            <h4>Creative Flow Space</h4>
+            <p>Creative · 2/8 members · Public</p>
+          </div>
+          <div class="room-members">
+            <div class="member-dot" style="background:rgba(236,72,153,0.6);">L</div>
+            <div class="member-dot" style="background:rgba(6,182,212,0.6);">S</div>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:16px;">
+          <div style="display:inline-flex;gap:8px;align-items:center;background:rgba(91,143,255,0.1);border:1px solid rgba(91,143,255,0.2);border-radius:99px;padding:8px 18px;font-size:13px;color:#7BAAFF;">
+            + Create Your Room
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  Habits  -->
+<section class="feature-section" id="habits" style="background:var(--bg-2);">
+  <div class="container">
+    <div class="feature-split reverse">
+      <div class="feature-text reveal">
+        <span class="section-label" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.25);color:#34D399;">✅ Habit Tracker</span>
+        <h2>Build the Routines <span class="gradient-text">That Build You</span></h2>
+        <p>
+          Cognitive performance is not just about what happens in training sessions  it's the cumulative effect of daily habits: sleep quality, physical movement, screen time management, and reading.
+        </p>
+        <p>
+          Lally et al. (2010) found that habit formation takes an average of 66 days. LockedIn's streak system, weekly day-scheduling, and visual progress tracking are engineered to get you through that threshold and make focus-supporting behaviors automatic.
+        </p>
+        <ul class="feature-list">
+          <li><span class="check">✓</span> Create habits with custom icons, duration, and frequency settings</li>
+          <li><span class="check">✓</span> Schedule specific days of the week for each habit</li>
+          <li><span class="check">✓</span> Track daily completion streaks  the most powerful behavior motivator</li>
+          <li><span class="check">✓</span> 15+ habit icons: sleep, run, meditate, read, no-phone, water, journal, and more</li>
+          <li><span class="check">✓</span> Optimistic UI updates for instant feedback</li>
+          <li><span class="check">✓</span> Weekly overview showing completion across all habits</li>
+        </ul>
+      </div>
+      <div class="feature-visual reveal reveal-delay-2">
+        <div class="visual-header">
+          <div class="visual-dot" style="background:#10B981;"></div>
+          <div class="visual-dot" style="background:rgba(255,255,255,0.2);"></div>
+          <div class="visual-dot" style="background:rgba(255,255,255,0.1);"></div>
+          <div class="visual-title">Today's Habits</div>
+        </div>
+        <div class="habit-item">
+          <div class="habit-icon">🧘</div>
+          <div class="habit-info">
+            <h4>Morning Meditation</h4>
+            <div class="week-dots">
+              <div class="week-dot done"></div><div class="week-dot done"></div><div class="week-dot done"></div>
+              <div class="week-dot done"></div><div class="week-dot"></div><div class="week-dot"></div><div class="week-dot"></div>
+            </div>
+            <div class="streak">🔥 12-day streak</div>
+          </div>
+          <div class="habit-check">✓</div>
+        </div>
+        <div class="habit-item">
+          <div class="habit-icon">📚</div>
+          <div class="habit-info">
+            <h4>Read 20 Minutes</h4>
+            <div class="week-dots">
+              <div class="week-dot done"></div><div class="week-dot done"></div><div class="week-dot done"></div>
+              <div class="week-dot"></div><div class="week-dot"></div><div class="week-dot"></div><div class="week-dot"></div>
+            </div>
+            <div class="streak">🔥 7-day streak</div>
+          </div>
+          <div class="habit-check">✓</div>
+        </div>
+        <div class="habit-item">
+          <div class="habit-icon">🏃</div>
+          <div class="habit-info">
+            <h4>30-Minute Run</h4>
+            <div class="week-dots">
+              <div class="week-dot done"></div><div class="week-dot"></div><div class="week-dot done"></div>
+              <div class="week-dot"></div><div class="week-dot"></div><div class="week-dot"></div><div class="week-dot"></div>
+            </div>
+            <div class="streak">🔥 3-day streak</div>
+          </div>
+          <div class="habit-check pending">○</div>
+        </div>
+        <div class="habit-item">
+          <div class="habit-icon">📵</div>
+          <div class="habit-info">
+            <h4>Phone-Free Morning</h4>
+            <div class="week-dots">
+              <div class="week-dot done"></div><div class="week-dot done"></div><div class="week-dot done"></div>
+              <div class="week-dot done"></div><div class="week-dot done"></div><div class="week-dot"></div><div class="week-dot"></div>
+            </div>
+            <div class="streak">🔥 5-day streak</div>
+          </div>
+          <div class="habit-check pending">○</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  AI Books  -->
+<section class="feature-section" id="books">
+  <div class="container">
+    <div class="feature-split">
+      <div class="feature-text reveal">
+        <span class="section-label" style="background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.25);color:#FCD34D;">📚 AI Book Retention</span>
+        <h2>Read More. <span class="gradient-text">Remember More.</span></h2>
+        <p>
+          Reading alone builds vocabulary and knowledge  but most information is forgotten within 48 hours without active retrieval practice. LockedIn's AI-generated retention quizzes transform passive reading into deep encoding.
+        </p>
+        <p>
+          Roediger & Karpicke (2006) demonstrated that testing yourself on material produces 50–70% better long-term retention than re-reading  an effect called the "testing effect." LockedIn's AI automatically generates quiz questions for any book, applying this principle at scale.
+        </p>
+        <ul class="feature-list">
+          <li><span class="check">✓</span> Growing digital library organized by level (Beginner / Intermediate / Advanced)</li>
+          <li><span class="check">✓</span> Text and audio reading modes</li>
+          <li><span class="check">✓</span> AI-generated retention tests after completing each book</li>
+          <li><span class="check">✓</span> Book progress tracking and reading history</li>
+          <li><span class="check">✓</span> Search and filter by title, author, category, and difficulty level</li>
+          <li><span class="check">✓</span> Retention scores feed into the overall Focus Score</li>
+        </ul>
+      </div>
+      <div class="feature-visual reveal reveal-delay-2">
+        <div class="visual-header">
+          <div class="visual-dot" style="background:#F59E0B;"></div>
+          <div class="visual-dot" style="background:rgba(255,255,255,0.2);"></div>
+          <div class="visual-dot" style="background:rgba(255,255,255,0.1);"></div>
+          <div class="visual-title">My Library</div>
+        </div>
+        <div class="book-card-visual">
+          <div class="book-cover" style="background:rgba(123,111,255,0.2);">🧠</div>
+          <div class="book-meta">
+            <h4>Thinking, Fast and Slow</h4>
+            <p>Daniel Kahneman · Advanced</p>
+            <div class="book-badge" style="background:rgba(16,185,129,0.15);color:#34D399;border:1px solid rgba(16,185,129,0.3);">Quiz Completed ✓</div>
+          </div>
+        </div>
+        <div class="book-card-visual">
+          <div class="book-cover" style="background:rgba(245,158,11,0.2);">⚡</div>
+          <div class="book-meta">
+            <h4>Deep Work</h4>
+            <p>Cal Newport · Intermediate</p>
+            <div class="book-badge" style="background:rgba(245,158,11,0.15);color:#FCD34D;border:1px solid rgba(245,158,11,0.3);">Reading  64%</div>
+          </div>
+        </div>
+        <div class="book-card-visual">
+          <div class="book-cover" style="background:rgba(6,182,212,0.2);">🔬</div>
+          <div class="book-meta">
+            <h4>The Brain That Changes Itself</h4>
+            <p>Norman Doidge · Intermediate</p>
+            <div class="book-badge" style="background:rgba(91,143,255,0.15);color:#7BAAFF;border:1px solid rgba(91,143,255,0.3);">Not Started</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;padding:12px 14px;background:rgba(123,111,255,0.08);border:1px solid rgba(123,111,255,0.2);border-radius:var(--r);">
+          <div style="font-size:12px;color:var(--purple-light);font-weight:600;margin-bottom:4px;">🤖 AI Quiz Ready</div>
+          <div style="font-size:13px;color:var(--text-2);">10 retention questions generated for "Thinking, Fast and Slow"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  Diagnostic  -->
+<section class="feature-section" id="diagnostic" style="background:var(--bg-2);">
+  <div class="container">
+    <div class="feature-split reverse">
+      <div class="feature-text reveal">
+        <span class="section-label" style="background:rgba(236,72,153,0.1);border-color:rgba(236,72,153,0.25);color:#F472B6;">🩺 Diagnostic Assessment</span>
+        <h2>Know Your <span class="gradient-text">Cognitive Baseline</span></h2>
+        <p>
+          You cannot improve what you cannot measure. LockedIn's diagnostic assessment uses four validated clinical and research scales to establish your cognitive and behavioral baseline across the dimensions most relevant to focus and productivity.
+        </p>
+        <p>
+          Unlike self-report tools from wellness apps, each dimension maps directly to a published psychometric instrument used in clinical and academic research  giving your scores genuine scientific grounding.
+        </p>
+        <ul class="feature-list">
+          <li><span class="check">✓</span> <strong>Screen Habits</strong>  based on Smartphone Addiction Scale-Short Version (SAS-SV, Kwon et al., 2013)</li>
+          <li><span class="check">✓</span> <strong>Attention</strong>  based on ASRS-v1.1 Adult ADHD Self-Report Scale (Kessler et al., 2005 / WHO)</li>
+          <li><span class="check">✓</span> <strong>Lifestyle</strong>  based on Pittsburgh Sleep Quality Index (PSQI) + WHO Physical Activity Guidelines</li>
+          <li><span class="check">✓</span> <strong>Learning</strong>  based on Need for Cognition Scale (NCS, Cacioppo & Petty, 1982)</li>
+          <li><span class="check">✓</span> Results inform personalized coaching suggestions and game prioritization</li>
+        </ul>
+      </div>
+      <div class="feature-visual reveal reveal-delay-2">
+        <div class="visual-header">
+          <div class="visual-dot" style="background:#EC4899;"></div>
+          <div class="visual-dot" style="background:rgba(255,255,255,0.2);"></div>
+          <div class="visual-dot" style="background:rgba(255,255,255,0.1);"></div>
+          <div class="visual-title">Your Diagnostic Results</div>
+        </div>
+        <div class="diag-dimension">
+          <div class="diag-icon">📱</div>
+          <div class="diag-info">
+            <h4>Screen Habits</h4>
+            <div class="progress-bar"><div class="progress-fill" data-width="68%" style="width:0%;background:linear-gradient(90deg,#D946EF,#EC4899);"></div></div>
+          </div>
+          <div class="diag-score" style="color:#F472B6;">68/100</div>
+        </div>
+        <div class="diag-dimension">
+          <div class="diag-icon">🎯</div>
+          <div class="diag-info">
+            <h4>Attention</h4>
+            <div class="progress-bar"><div class="progress-fill" data-width="55%" style="width:0%;background:linear-gradient(90deg,#5B8FFF,#60A5FA);"></div></div>
+          </div>
+          <div class="diag-score" style="color:#7BAAFF;">55/100</div>
+        </div>
+        <div class="diag-dimension">
+          <div class="diag-icon">🌙</div>
+          <div class="diag-info">
+            <h4>Lifestyle</h4>
+            <div class="progress-bar"><div class="progress-fill" data-width="82%" style="width:0%;background:linear-gradient(90deg,#10B981,#34D399);"></div></div>
+          </div>
+          <div class="diag-score" style="color:#34D399;">82/100</div>
+        </div>
+        <div class="diag-dimension">
+          <div class="diag-icon">📖</div>
+          <div class="diag-info">
+            <h4>Learning Drive</h4>
+            <div class="progress-bar"><div class="progress-fill" data-width="74%" style="width:0%;background:linear-gradient(90deg,#F59E0B,#FCD34D);"></div></div>
+          </div>
+          <div class="diag-score" style="color:#FCD34D;">74/100</div>
+        </div>
+        <div style="margin-top:16px;padding:12px 14px;background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.2);border-radius:var(--r);">
+          <div style="font-size:12px;color:#F472B6;font-weight:600;margin-bottom:4px;">💡 Recommended Focus</div>
+          <div style="font-size:13px;color:var(--text-2);">Your Attention score is lowest. Prioritize Color Match, Flanker, and Go/No-Go daily challenges.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  Dashboard  -->
+<section class="feature-section" id="dashboard">
+  <div class="container">
+    <div class="feature-split">
+      <div class="feature-text reveal">
+        <span class="section-label" style="background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.25);color:#22D3EE;">📊 Focus Score Dashboard</span>
+        <h2>One Number. <span class="gradient-text">Total Clarity.</span></h2>
+        <p>
+          LockedIn's dashboard synthesizes all activity  game performance, habit streaks, focus sessions, and diagnostic scores  into a single Focus Score that reflects your overall cognitive wellness at a glance.
+        </p>
+        <p>
+          Personalized coaching suggestions update daily based on your recent performance, and a streak system tracks how many consecutive days you've engaged with the platform  the strongest behavioral indicator of long-term improvement.
+        </p>
+        <ul class="feature-list">
+          <li><span class="check">✓</span> Unified Focus Score integrating all platform activity</li>
+          <li><span class="check">✓</span> Daily coaching goals generated by the AI coaching engine</li>
+          <li><span class="check">✓</span> Streak counter  consecutive days of engagement</li>
+          <li><span class="check">✓</span> Distracting minutes tracker  screen time awareness</li>
+          <li><span class="check">✓</span> Daily game completion status (N-Back, Go/No-Go, Flanker)</li>
+          <li><span class="check">✓</span> Quick-access buttons to all platform features</li>
+        </ul>
+      </div>
+      <div class="feature-visual reveal reveal-delay-2">
+        <div class="visual-header">
+          <div class="visual-dot" style="background:#06B6D4;"></div>
+          <div class="visual-dot" style="background:rgba(255,255,255,0.2);"></div>
+          <div class="visual-dot" style="background:rgba(255,255,255,0.1);"></div>
+          <div class="visual-title">Good morning, Ahmad 👋</div>
+        </div>
+        <div class="score-ring-container">
+          <div class="score-ring">
+            <div class="score-ring-val">78</div>
+          </div>
+        </div>
+        <div class="stat-row-visual">
+          <div>
+            <div class="stat-val-small" style="color:var(--amber);">47</div>
+            <div class="stat-lbl-small">Distracting min</div>
+          </div>
+          <div>
+            <div class="stat-val-small" style="color:var(--emerald);">12</div>
+            <div class="stat-lbl-small">Day streak 🔥</div>
+          </div>
+          <div>
+            <div class="stat-val-small" style="color:var(--purple-light);">3</div>
+            <div class="stat-lbl-small">Sessions today</div>
+          </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--r);padding:14px;">
+          <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px;">Today's Daily Challenges</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-size:13px;">Visual N-Back</span>
+            <span style="font-size:12px;color:var(--emerald);font-weight:600;">Done ✓</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-size:13px;">Go / No-Go</span>
+            <span style="font-size:12px;color:var(--emerald);font-weight:600;">Done ✓</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:13px;">Flanker Task</span>
+            <span style="font-size:12px;color:var(--amber);font-weight:600;">Pending →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  CTA  -->
+<section class="section text-center" style="background:var(--bg-2);border-top:1px solid var(--border);">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-label">🚀 Get Started Free</span>
+      <h2 style="font-size:clamp(28px,4vw,52px);margin-bottom:20px;">Six Systems.<br><span class="gradient-text">One Platform. Zero Excuses.</span></h2>
+      <p style="font-size:18px;color:var(--text-2);max-width:560px;margin:0 auto 40px;">Download the APK and start your first session in under 2 minutes. No subscription. No barriers. Just training.</p>
+      <a href="download.html" class="btn btn-primary btn-xl">⬇ Download Free APK</a>
+    </div>
+  </div>
+</section>
+
+<!--  Footer  -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3><span class="gradient-text">LockedIn</span></h3>
+        <p>A complete cognitive wellness platform. Games, habits, collaboration, and diagnostics  all backed by science.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <a href="index.html">Home</a>
+        <a href="research.html">The Science</a>
+        <a href="games.html">Games</a>
+        <a href="features.html">Features</a>
+        <a href="download.html">Download</a>
+      </div>
+      <div class="footer-col">
+        <h4>Features</h4>
+        <a href="#rooms">Focus Rooms</a>
+        <a href="#habits">Habit Tracker</a>
+        <a href="#books">AI Books</a>
+        <a href="#diagnostic">Diagnostic</a>
+        <a href="#dashboard">Dashboard</a>
+      </div>
+      <div class="footer-col">
+        <h4>Science</h4>
+        <a href="research.html">Research Overview</a>
+        <a href="research.html#section-memory">Memory Training</a>
+        <a href="research.html#section-attention">Attention Training</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 LockedIn. All rights reserved.</span>
+      <span>Built on Peer-Reviewed Cognitive Science</span>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

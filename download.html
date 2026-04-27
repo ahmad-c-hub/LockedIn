@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Download LockedIn APK</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /*  Hero  */
+    .dl-hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 120px 0 80px;
+      position: relative; overflow: hidden;
+    }
+    .dl-glow-1 {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(123,111,255,0.2) 0%, transparent 65%);
+      top: -200px; right: -200px;
+    }
+    .dl-glow-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 65%);
+      bottom: -100px; left: -150px;
+    }
+
+    .dl-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
+      position: relative; z-index: 1;
+    }
+
+    .dl-text h1 { font-size: clamp(38px, 6vw, 72px); margin-bottom: 20px; line-height: 1.05; }
+    .dl-text p { font-size: 18px; color: var(--text-2); line-height: 1.7; margin-bottom: 40px; max-width: 520px; }
+
+    /*  Big download button  */
+    .dl-btn-wrap { display: flex; flex-direction: column; gap: 16px; }
+    .dl-btn-main {
+      display: flex; align-items: center; gap: 20px;
+      background: var(--grad);
+      border-radius: var(--r-xl); padding: 24px 32px;
+      text-decoration: none; color: #fff;
+      box-shadow: 0 8px 40px rgba(123,111,255,0.4);
+      transition: var(--transition); cursor: pointer;
+      border: none; width: 100%;
+    }
+    .dl-btn-main:hover { transform: translateY(-3px); box-shadow: 0 16px 60px rgba(123,111,255,0.55); }
+    .dl-btn-icon { font-size: 40px; flex-shrink: 0; }
+    .dl-btn-text .line1 { font-size: 13px; font-weight: 500; opacity: 0.85; margin-bottom: 2px; }
+    .dl-btn-text .line2 { font-size: 22px; font-weight: 800; font-family: 'Space Grotesk', sans-serif; }
+    .dl-btn-arrow { margin-left: auto; font-size: 24px; }
+
+    .dl-meta {
+      display: flex; gap: 24px; font-size: 13px; color: var(--text-3);
+    }
+    .dl-meta span { display: flex; align-items: center; gap: 6px; }
+
+    /*  Phone mockup  */
+    .phone-wrap {
+      display: flex; justify-content: center; align-items: center;
+      position: relative;
+    }
+    .phone-outer {
+      width: 280px;
+      background: linear-gradient(145deg, #1e1e3a, #13132d);
+      border-radius: 40px;
+      border: 2px solid rgba(255,255,255,0.1);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 60px rgba(123,111,255,0.2);
+      padding: 16px;
+      position: relative;
+    }
+    .phone-notch {
+      width: 80px; height: 24px;
+      background: #0a0a1a; border-radius: 0 0 14px 14px;
+      margin: 0 auto 16px;
+    }
+    .phone-screen {
+      background: var(--bg); border-radius: 28px;
+      padding: 20px 16px; min-height: 480px;
+    }
+    .app-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .app-header .app-title { font-size: 18px; font-weight: 700; font-family: 'Space Grotesk',sans-serif; }
+    .app-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--grad); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+    .app-score-card {
+      background: linear-gradient(135deg, rgba(123,111,255,0.25), rgba(91,143,255,0.1));
+      border: 1px solid rgba(123,111,255,0.3);
+      border-radius: 20px; padding: 18px;
+      text-align: center; margin-bottom: 16px;
+    }
+    .app-score-num { font-size: 44px; font-weight: 900; font-family: 'Space Grotesk',sans-serif; background: var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; }
+    .app-score-lbl { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+    .app-score-stats { display: flex; justify-content: space-around; margin-top: 12px; }
+    .app-score-stats .s { text-align: center; }
+    .app-score-stats .s .v { font-size: 16px; font-weight: 700; font-family: 'Space Grotesk',sans-serif; }
+    .app-score-stats .s .l { font-size: 10px; color: var(--text-3); }
+
+    .app-games-row { display: flex; gap: 10px; margin-bottom: 16px; }
+    .app-game-tile {
+      flex: 1; border-radius: 14px; padding: 12px 8px; text-align: center;
+      font-size: 10px; font-weight: 600;
+    }
+    .app-game-tile .g-icon { font-size: 20px; margin-bottom: 4px; }
+
+    .app-habits-row { display: flex; flex-direction: column; gap: 8px; }
+    .app-habit-row {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.04); border-radius: 10px; padding: 8px 10px;
+    }
+    .app-habit-row .h-icon { font-size: 16px; }
+    .app-habit-row .h-name { font-size: 11px; font-weight: 500; flex: 1; }
+    .app-habit-row .h-done { font-size: 14px; }
+
+    /*  Features checklist  */
+    .features-check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+    .check-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 16px;
+    }
+    .check-item .ci-icon { font-size: 22px; flex-shrink: 0; }
+    .check-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .check-item p { font-size: 12px; color: var(--text-3); line-height: 1.4; }
+
+    /*  Install steps  */
+    .install-steps {
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: var(--r-xl); padding: 40px;
+    }
+    .install-steps h2 { font-size: 28px; margin-bottom: 8px; }
+    .install-steps .sub { font-size: 15px; color: var(--text-2); margin-bottom: 32px; }
+
+    .steps-list { counter-reset: steps; }
+    .step-item {
+      display: flex; gap: 20px; align-items: flex-start;
+      padding: 20px 0; border-bottom: 1px solid var(--border);
+      counter-increment: steps;
+    }
+    .step-item:last-child { border-bottom: none; }
+    .step-num {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--grad); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800; font-family: 'Space Grotesk', sans-serif;
+      flex-shrink: 0;
+    }
+    .step-content h4 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .step-content p { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+    .step-content .tip {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--amber);
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 99px; padding: 4px 12px; margin-top: 8px;
+    }
+
+    /*  Requirements  */
+    .req-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .req-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 24px; text-align: center;
+    }
+    .req-card .req-icon { font-size: 32px; margin-bottom: 12px; }
+    .req-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .req-card p { font-size: 13px; color: var(--text-2); }
+
+    /*  FAQ  */
+    .faq-item {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r); overflow: hidden; margin-bottom: 12px;
+    }
+    .faq-q {
+      padding: 20px 24px; font-size: 15px; font-weight: 600;
+      cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+      transition: var(--transition);
+    }
+    .faq-q:hover { background: rgba(255,255,255,0.03); }
+    .faq-q .arrow { transition: var(--transition); font-size: 18px; color: var(--text-3); }
+    .faq-a {
+      padding: 0 24px; max-height: 0; overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      font-size: 14px; color: var(--text-2); line-height: 1.7;
+    }
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 24px 20px; }
+    .faq-item.open .arrow { transform: rotate(180deg); }
+
+    @media (max-width: 1024px) {
+      .dl-grid { grid-template-columns: 1fr; gap: 56px; }
+      .phone-wrap { display: none; }
+    }
+    @media (max-width: 768px) {
+      .features-check-grid { grid-template-columns: 1fr; }
+      .req-grid { grid-template-columns: 1fr; }
+      .install-steps { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!--  Navigation  -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">🧠</div>
+      LockedIn
+    </a>
+    <div class="nav-links">
+      <a href="index.html"    class="nav-link">Home</a>
+      <a href="research.html" class="nav-link">Science</a>
+      <a href="games.html"    class="nav-link">Games</a>
+      <a href="features.html" class="nav-link">Features</a>
+      <a href="download.html" class="nav-link nav-cta">⬇ Download APK</a>
+    </div>
+    <button class="nav-toggle" id="navToggle">☰</button>
+  </div>
+  <div class="nav-mobile" id="mobileNav">
+    <a href="index.html"    class="nav-link">Home</a>
+    <a href="research.html" class="nav-link">Science</a>
+    <a href="games.html"    class="nav-link">Games</a>
+    <a href="features.html" class="nav-link">Features</a>
+    <a href="download.html" class="nav-link nav-cta">⬇ Download APK</a>
+  </div>
+</nav>
+
+<!--  Download Hero  -->
+<section class="dl-hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="bg-glow dl-glow-1"></div>
+  <div class="bg-glow dl-glow-2"></div>
+  <div class="container">
+    <div class="dl-grid">
+      <div class="dl-text reveal">
+        <span class="section-label">🚀 Free Download</span>
+        <h1>Get LockedIn<br><span class="gradient-text">Absolutely Free</span></h1>
+        <p>
+          Download the Android APK and install it in under 60 seconds.
+          No subscription required. No account walls. Just science-backed
+          cognitive training, ready to go.
+        </p>
+
+        <div class="dl-btn-wrap">
+          <!-- UPDATE THIS HREF WITH THE REAL APK URL WHEN AVAILABLE -->
+          <a href="#" class="dl-btn-main" id="downloadBtn" onclick="handleDownload(event)">
+            <div class="dl-btn-icon">📲</div>
+            <div class="dl-btn-text">
+              <div class="line1">Download for Android</div>
+              <div class="line2">LockedIn APK</div>
+            </div>
+            <div class="dl-btn-arrow">↓</div>
+          </a>
+
+          <div class="dl-meta">
+            <span>🤖 Android 8.0+</span>
+            <span>📦 Free</span>
+            <span>🔒 Safe &amp; Secure</span>
+          </div>
+        </div>
+
+        <!-- Release note -->
+        <div class="highlight-box mt-32" style="font-size:13px;">
+          <strong>📌 Note:</strong> LockedIn is currently in active development. The APK link will be updated upon official release. Check back soon, or bookmark this page.
+        </div>
+      </div>
+
+      <!-- Phone mockup -->
+      <div class="phone-wrap reveal reveal-delay-2">
+        <div class="phone-outer">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="app-header">
+              <div class="app-title">LockedIn</div>
+              <div class="app-avatar">👤</div>
+            </div>
+            <div class="app-score-card">
+              <div class="app-score-num">78</div>
+              <div class="app-score-lbl">Focus Score</div>
+              <div class="app-score-stats">
+                <div class="s"><div class="v" style="color:var(--amber)">47</div><div class="l">Screen min</div></div>
+                <div class="s"><div class="v" style="color:var(--emerald)">12🔥</div><div class="l">Day streak</div></div>
+                <div class="s"><div class="v" style="color:var(--purple-light)">3</div><div class="l">Sessions</div></div>
+              </div>
+            </div>
+            <div class="app-games-row">
+              <div class="app-game-tile" style="background:rgba(123,111,255,0.15);">
+                <div class="g-icon">🔲</div>
+                <span style="color:var(--purple-light)">Memory Matrix</span>
+              </div>
+              <div class="app-game-tile" style="background:rgba(16,185,129,0.12);">
+                <div class="g-icon">🎨</div>
+                <span style="color:#34D399">Color Match</span>
+              </div>
+              <div class="app-game-tile" style="background:rgba(245,158,11,0.12);">
+                <div class="g-icon">⚡</div>
+                <span style="color:var(--amber)">Speed Match</span>
+              </div>
+            </div>
+            <div class="app-habits-row">
+              <div class="app-habit-row">
+                <div class="h-icon">🧘</div>
+                <div class="h-name">Meditation</div>
+                <div class="h-done" style="color:var(--emerald)">✓</div>
+              </div>
+              <div class="app-habit-row">
+                <div class="h-icon">📚</div>
+                <div class="h-name">Read 20min</div>
+                <div class="h-done" style="color:var(--emerald)">✓</div>
+              </div>
+              <div class="app-habit-row">
+                <div class="h-icon">🏃</div>
+                <div class="h-name">Morning Run</div>
+                <div class="h-done" style="color:var(--border)">○</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Floating badge -->
+        <div style="position:absolute;top:-16px;right:-16px;background:var(--grad);border-radius:14px;padding:10px 16px;font-size:12px;font-weight:700;box-shadow:0 4px 20px rgba(123,111,255,0.4);">
+          Free Forever
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  What You Get  -->
+<section class="section" style="background:var(--bg-2);border-top:1px solid var(--border);">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">✅ What's Included</span>
+      <h2>Everything. For <span class="gradient-text">Free.</span></h2>
+      <p>No freemium locks. No premium tiers. LockedIn's full feature set is available to every user from day one.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="features-check-grid reveal">
+      <div class="check-item">
+        <div class="ci-icon">🎮</div>
+        <div>
+          <h4>10 Cognitive Games</h4>
+          <p>All games, all 10 levels each. Memory, Attention, Speed, Logic  fully unlocked.</p>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="ci-icon">🏠</div>
+        <div>
+          <h4>Focus Rooms</h4>
+          <p>Join or create real-time collaborative focus sessions with users worldwide.</p>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="ci-icon">✅</div>
+        <div>
+          <h4>Habit Tracker</h4>
+          <p>Unlimited habits, day scheduling, streak tracking, and weekly overviews.</p>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="ci-icon">📚</div>
+        <div>
+          <h4>AI Book Retention</h4>
+          <p>Full library access with AI-generated comprehension quizzes for every book.</p>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="ci-icon">🩺</div>
+        <div>
+          <h4>Diagnostic Assessment</h4>
+          <p>4-dimension cognitive baseline assessment using validated clinical scales.</p>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="ci-icon">📊</div>
+        <div>
+          <h4>Focus Score Dashboard</h4>
+          <p>Unified cognitive wellness score with daily coaching goals and streak tracking.</p>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="ci-icon">🔥</div>
+        <div>
+          <h4>Daily Challenges</h4>
+          <p>Three daily cognitive tasks (N-Back, Go/No-Go, Flanker) refreshed every 24 hours.</p>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="ci-icon">☁️</div>
+        <div>
+          <h4>Cloud Sync</h4>
+          <p>Your progress, streaks, and scores sync securely to our backend in real-time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  Install Steps  -->
+<section class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">📲 Installation</span>
+      <h2>Up and Running in <span class="gradient-text">60 Seconds</span></h2>
+      <p>Installing an APK on Android takes four simple steps.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="install-steps reveal">
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Download the APK File</h4>
+            <p>Tap the "Download LockedIn APK" button above. Your browser will download the file to your device's Downloads folder. The file is approximately 20–30 MB.</p>
+            <div class="tip">💡 Tip: Use Wi-Fi for fastest download</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Allow Installation from Unknown Sources</h4>
+            <p>Android may ask for permission to install apps from sources other than the Google Play Store. Go to <strong>Settings → Apps → Special App Access → Install Unknown Apps</strong>, then allow your browser or file manager to install APKs.</p>
+            <div class="tip">⚠️ Only required if installing for the first time</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Open the APK and Install</h4>
+            <p>Open the downloaded .apk file from your Downloads folder or notification bar. Tap "Install" when prompted. The installation takes approximately 10–20 seconds.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Launch LockedIn and Create Your Account</h4>
+            <p>Tap "Open" after installation completes, or find the LockedIn icon in your app drawer. Create your free account, complete the 4-dimension diagnostic assessment, and start your first training session.</p>
+            <div class="tip">🎯 Complete the diagnostic first  it personalizes your experience</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  Requirements  -->
+<section class="section" style="background:var(--bg-2);border-top:1px solid var(--border);">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">📋 Requirements</span>
+      <h2>System <span class="gradient-text">Requirements</span></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="req-grid reveal">
+      <div class="req-card">
+        <div class="req-icon">🤖</div>
+        <h4>Android Version</h4>
+        <p>Android 8.0 (Oreo) or higher. Compatible with Android 8, 9, 10, 11, 12, 13, and 14.</p>
+      </div>
+      <div class="req-card">
+        <div class="req-icon">💾</div>
+        <h4>Storage</h4>
+        <p>Minimum 50 MB free storage for installation. Additional space for offline book content.</p>
+      </div>
+      <div class="req-card">
+        <div class="req-icon">🌐</div>
+        <h4>Internet Connection</h4>
+        <p>Required for account creation, cloud sync, Focus Rooms, and AI book features. Games work offline once loaded.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  FAQ  -->
+<section class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">❓ FAQ</span>
+      <h2>Common <span class="gradient-text">Questions</span></h2>
+      <div class="divider"></div>
+    </div>
+    <div style="max-width:720px;margin:0 auto;" class="reveal">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Is LockedIn really free?
+          <span class="arrow">▾</span>
+        </div>
+        <div class="faq-a">Yes, completely free. There are no in-app purchases, premium tiers, or subscription fees. All games, all levels, all features  fully available to every user at no cost.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Is my data secure?
+          <span class="arrow">▾</span>
+        </div>
+        <div class="faq-a">Yes. All data is transmitted over HTTPS and stored securely on our backend. Authentication uses JWT tokens. We do not sell or share user data with third parties.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          How long does it take to see results?
+          <span class="arrow">▾</span>
+        </div>
+        <div class="faq-a">Research suggests measurable working memory improvements are visible within 2–4 weeks of consistent daily training (10–15 minutes/day). Processing speed gains can appear in as few as 5–7 days. Habit formation takes longer  typically 4–8 weeks of consistency.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Can I use LockedIn without an account?
+          <span class="arrow">▾</span>
+        </div>
+        <div class="faq-a">An account is required to access most features, as progress tracking, cloud sync, Focus Rooms, and AI features all rely on backend authentication. Account creation is free and takes under a minute.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Is this available on iOS?
+          <span class="arrow">▾</span>
+        </div>
+        <div class="faq-a">LockedIn is currently available as an Android APK. An iOS version and Google Play listing are planned for a future release. Follow the project for updates.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          How is LockedIn different from other brain training apps?
+          <span class="arrow">▾</span>
+        </div>
+        <div class="faq-a">LockedIn is built ground-up on peer-reviewed cognitive neuroscience rather than gamification trends. Every game maps to a validated research paradigm (Stroop, n-back, flanker, Corsi blocks, etc.), and every feature serves a specific evidence-based purpose. It also combines games, habits, collaborative focus, AI book retention, and a clinical-grade diagnostic into one integrated platform  a scope no current competitor matches.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--  Final CTA  -->
+<section class="section text-center" style="background:linear-gradient(135deg, rgba(123,111,255,0.1) 0%, rgba(236,72,153,0.06) 100%);border-top:1px solid var(--border);">
+  <div class="container">
+    <div class="reveal">
+      <div style="font-size:56px;margin-bottom:20px;">🧠</div>
+      <h2 style="font-size:clamp(28px,4vw,52px);margin-bottom:20px;">Your Brain is Waiting.<br><span class="gradient-text">Start Today.</span></h2>
+      <p style="font-size:18px;color:var(--text-2);max-width:500px;margin:0 auto 40px;">
+        12 minutes a day. 10 research-backed games. One measurable result: a sharper, more focused mind.
+      </p>
+      <a href="#" class="dl-btn-main" onclick="handleDownload(event)" style="max-width:440px;margin:0 auto;justify-content:center;">
+        <div class="dl-btn-icon">📲</div>
+        <div class="dl-btn-text">
+          <div class="line1">Download for Android</div>
+          <div class="line2">LockedIn APK  Free</div>
+        </div>
+        <div class="dl-btn-arrow">↓</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!--  Footer  -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3><span class="gradient-text">LockedIn</span></h3>
+        <p>A free, science-backed cognitive training platform for Android. Built to sharpen minds, build habits, and measure progress.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <a href="index.html">Home</a>
+        <a href="research.html">The Science</a>
+        <a href="games.html">Games</a>
+        <a href="features.html">Features</a>
+        <a href="download.html">Download</a>
+      </div>
+      <div class="footer-col">
+        <h4>Install</h4>
+        <a href="#" onclick="handleDownload(event)">Download APK</a>
+        <a href="#steps">Installation Steps</a>
+        <a href="#requirements">Requirements</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="#faq">FAQ</a>
+        <a href="research.html">Research</a>
+        <a href="games.html">Games Guide</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 LockedIn. All rights reserved.</span>
+      <span>Built on Peer-Reviewed Cognitive Science</span>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+function handleDownload(e) {
+  e.preventDefault();
+  // Replace the href below with the real APK download URL
+  const APK_URL = '#'; // TODO: Update with real APK URL
+  if (APK_URL === '#') {
+    showToast('APK coming soon! Check back when the official release is published.');
+  } else {
+    window.location.href = APK_URL;
+  }
+}
+
+function showToast(msg) {
+  const toast = document.createElement('div');
+  toast.textContent = msg;
+  Object.assign(toast.style, {
+    position: 'fixed', bottom: '32px', left: '50%',
+    transform: 'translateX(-50%)',
+    background: 'linear-gradient(135deg,#7B6FFF,#5B8FFF)',
+    color: '#fff', padding: '14px 28px', borderRadius: '99px',
+    fontSize: '14px', fontWeight: '600', fontFamily: 'Inter, sans-serif',
+    boxShadow: '0 8px 32px rgba(123,111,255,0.4)',
+    zIndex: '9999', textAlign: 'center', maxWidth: '90vw',
+    animation: 'fadeInUp 0.3s ease',
+  });
+  document.head.insertAdjacentHTML('beforeend',
+    '<style>@keyframes fadeInUp{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}</style>');
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 4000);
+}
+</script>
+</body>
+</html>
