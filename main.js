@@ -13,15 +13,23 @@ document.addEventListener('DOMContentLoaded', () => {
   /* fullscreen toggle */
   const fsBtn = document.getElementById('fullscreenBtn');
   if (fsBtn) {
+    const el = document.documentElement;
+    const requestFS = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+    const exitFS   = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+    const getFS    = () => document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+
     fsBtn.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
+      if (!getFS()) {
+        requestFS && requestFS.call(el).catch(() => {});
       } else {
-        document.exitFullscreen();
+        exitFS && exitFS.call(document).catch(() => {});
       }
     });
-    document.addEventListener('fullscreenchange', () => {
-      document.body.classList.toggle('is-fullscreen', !!document.fullscreenElement);
+
+    ['fullscreenchange','webkitfullscreenchange','mozfullscreenchange','MSFullscreenChange'].forEach(ev => {
+      document.addEventListener(ev, () => {
+        document.body.classList.toggle('is-fullscreen', !!getFS());
+      });
     });
   }
 
