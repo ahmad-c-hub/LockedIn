@@ -10,6 +10,21 @@ document.addEventListener('DOMContentLoaded', () => {
     toggle.addEventListener('click', () => mobileNav.classList.toggle('open'));
   }
 
+  /* fullscreen toggle */
+  const fsBtn = document.getElementById('fullscreenBtn');
+  if (fsBtn) {
+    fsBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    });
+    document.addEventListener('fullscreenchange', () => {
+      document.body.classList.toggle('is-fullscreen', !!document.fullscreenElement);
+    });
+  }
+
   /* highlight active nav link */
   const page = location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.nav-link').forEach(a => {
